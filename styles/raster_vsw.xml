@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>Relative humidity</sld:Name>
+      <sld:Title/>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#ffffff" quantity="0"/>            
+<ColorMapEntry color="#eff3ff" quantity="0.2" />
+<ColorMapEntry color="#bdd7e7" quantity="0.4" />
+<ColorMapEntry color="#6baed6" quantity="0.6" />
+<ColorMapEntry color="#3182bd" quantity="0.8" />
+<ColorMapEntry color="#08519c" quantity="1" />
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

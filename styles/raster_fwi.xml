@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>FWI</sld:Name>
+      <sld:Title>FWI</sld:Title>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#A0FA8A" quantity="0" label="very low"/>
+<ColorMapEntry color="#fffe5d" quantity="5.2" label="low" />
+<ColorMapEntry color="#f5bd47" quantity="11.1" label="moderate" />
+<ColorMapEntry color="#ec5b3c" quantity="21.3" label="high" />
+<ColorMapEntry color="#a22735" quantity="38" label="very high" />
+<ColorMapEntry color="#87319f" quantity="50" label="extreme" />
+<ColorMapEntry color="#310a65" quantity="70" label="very extreme" />
+
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

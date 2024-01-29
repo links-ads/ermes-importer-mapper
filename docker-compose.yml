@@ -1,0 +1,86 @@
+version: "3"
+
+volumes:
+    psgdata:
+          driver: local
+          driver_opts:
+              o: bind
+              type: none
+              device: ${VOL_DIR}/psgdata
+    gsvdata:
+          driver: local
+          driver_opts:
+              o: bind
+              type: none
+              device: ${VOL_DIR}/gsvdata
+
+services:
+    database:
+        image: kartoza/postgis:13-3.1
+        env_file: .env
+        ports:
+            - "${DB_PORT_EXPOSE}:5432"
+        environment:
+            - POSTGRES_DB=${DATABASE_NAME}
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_PASSWORD=${DATABASE_PASS}
+            - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
+        volumes:
+            - psgdata:/var/lib/postgis/data
+        restart: unless-stopped
+
+    geoserver:
+        image: kartoza/geoserver:$VERSION
+        env_file: .env
+        ports:
+            - "${GEOSERVER_PORT}:8080"
+        restart: unless-stopped
+        environment:
+            - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
+            - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+            - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+            - GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}
+            - GEOWEBCACHE_CACHE_DIR=${GEOWEBCACHE_CACHE_DIR}
+            - INITIAL_MEMORY=${INITIAL_MEMORY}
+            - MAXIMUM_MEMORY=${MAXIMUM_MEMORY}
+            - STABLE_EXTENSIONS=netcdf-plugin,wmts-multi-dimensional-plugin,wps-download-plugin
+            - COMMUNITY_EXTENSIONS=ncwms-plugin
+            - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_HOST}
+            - EXISTING_DATA_DIR=true
+        volumes:
+            - gsvdata:${GEOSERVER_DATA_DIR}:rw
+        depends_on:
+            - database
+
+    importer:
+        build:
+            context: .
+            dockerfile: containers/importer/Dockerfile
+            args:
+                - TARGET=${BUILD_TARGET}
+        image: iam/importer:${BUILD_TARGET}
+        env_file: .env
+        command: importer
+        volumes:
+            - gsvdata:/opt/geoserver/data_dir:rw
+        depends_on:
+            - database
+        restart: unless-stopped
+
+    webserver:
+        build:
+            context: .
+            dockerfile: containers/importer/Dockerfile
+            args:
+              - TARGET=${BUILD_TARGET}
+        image: iam/webserver:${BUILD_TARGET}
+        env_file: .env
+        command: webserver
+        volumes:
+            - gsvdata:/opt/geoserver/data_dir
+        ports:
+            - "${WS_PORT}:7500"
+        depends_on:
+            - database
+            - geoserver
+        restart: unless-stopped

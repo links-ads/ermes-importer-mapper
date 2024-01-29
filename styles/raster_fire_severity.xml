@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>Fire severity</sld:Name>
+      <sld:Title/>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#fcfdbf" quantity="0" label="Unburned" />
+<ColorMapEntry color="#fea36f" quantity="1" label="Low Severity"  />
+<ColorMapEntry color="#e14d66" quantity="2" label="Moderate-low Severity"  />
+<ColorMapEntry color="#922b81" quantity="3" label="Moderate-high Severity"  />
+<ColorMapEntry color="#000004" quantity="4" label="High Severity"  />
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

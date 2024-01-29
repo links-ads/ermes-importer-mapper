@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" version="1.0.0" xmlns:sld="http://www.opengis.net/sld">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>fc202204210000_ENS — cape</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="ramp" extended="true">
+              <sld:ColorMapEntry label="0 J kg-1" quantity="0.01" color="#30123b"/>
+              <sld:ColorMapEntry label="302 J kg-1" quantity="302.75421277344236" color="#4666dd"/>
+              <sld:ColorMapEntry label="900 J kg-1" quantity="908.24005491406729" color="#22ebaa"/>
+              <sld:ColorMapEntry label="1200 J kg-1" quantity="1200.8908994304709" color="#88ff4e"/>
+              <sld:ColorMapEntry label="1500 J kg-1" quantity="1503.6325287976535" color="#d9e436"/>
+              <sld:ColorMapEntry label="1800 J kg-1" quantity="1806.3767415710961" color="#fea431"/>           
+              <sld:ColorMapEntry label="2100 J kg-1" quantity="2109.1183709382785" color="#ea4e0d"/>            
+              <sld:ColorMapEntry label="2400 J kg-1" quantity="2401.771798860942" color="#af1801"/>              
+              <sld:ColorMapEntry label="2700 J kg-1" quantity="2583.4162597999998" color="#7a0403"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+        <sld:VendorOption name="inclusion">mapOnly</sld:VendorOption>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>

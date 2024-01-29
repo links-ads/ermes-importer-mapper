@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>Temperature 2m</sld:Name>
+      <sld:Title/>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#313695" quantity="-40" label="-40&#176;C"/>
+<ColorMapEntry color="#90c3dd" quantity="-20" label="-20&#176;C" />
+<ColorMapEntry color="#ffffbf" quantity="0" label="0&#176;C" />
+<ColorMapEntry color="#f88d52" quantity="20" label="20&#176;C" />
+<ColorMapEntry color="#a50026" quantity="40" label="40&#176;C" />
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

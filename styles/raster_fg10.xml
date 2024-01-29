@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" version="1.0.0" xmlns:sld="http://www.opengis.net/sld">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>fc202204210000_ENS — fg10</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="ramp">
+              <sld:ColorMapEntry label="0,0" quantity="0" color="#fde725"/>
+              <sld:ColorMapEntry label="0,6" quantity="0.55612077834239904" color="#f1e51d"/>
+              <sld:ColorMapEntry label="1,1" quantity="1.112241556684801" color="#e5e419"/>
+              <sld:ColorMapEntry label="1,7" quantity="1.6683623350272001" color="#d8e219"/>
+              <sld:ColorMapEntry label="2,2" quantity="2.2244547514368009" color="#cae11f"/>
+              <sld:ColorMapEntry label="2,8" quantity="2.7805755297791999" color="#bddf26"/>
+              <sld:ColorMapEntry label="3,3" quantity="3.3366963081215988" color="#b0dd2f"/>
+              <sld:ColorMapEntry label="3,9" quantity="3.8928170864640008" color="#a2da37"/>
+              <sld:ColorMapEntry label="4,4" quantity="4.4489378648063997" color="#95d840"/>
+              <sld:ColorMapEntry label="5,0" quantity="5.0050586431488018" color="#89d548"/>
+              <sld:ColorMapEntry label="5,6" quantity="5.5611510595583997" color="#7cd250"/>
+              <sld:ColorMapEntry label="6,1" quantity="6.1172718379008018" color="#70cf57"/>
+              <sld:ColorMapEntry label="6,7" quantity="6.6733926162432002" color="#65cb5e"/>
+              <sld:ColorMapEntry label="7,2" quantity="7.2295133945855996" color="#5ac864"/>
+              <sld:ColorMapEntry label="7,8" quantity="7.7856341729280016" color="#50c46a"/>
+              <sld:ColorMapEntry label="8,3" quantity="8.341754951270401" color="#46c06f"/>
+              <sld:ColorMapEntry label="8,9" quantity="8.8978473676800007" color="#3dbc74"/>
+              <sld:ColorMapEntry label="9,5" quantity="9.453968146022401" color="#35b779"/>
+              <sld:ColorMapEntry label="10,0" quantity="10.010088924364799" color="#2eb37c"/>
+              <sld:ColorMapEntry label="10,6" quantity="10.566209702707202" color="#28ae80"/>
+              <sld:ColorMapEntry label="11,1" quantity="11.1223304810496" color="#24aa83"/>
+              <sld:ColorMapEntry label="11,7" quantity="11.678451259392002" color="#21a585"/>
+              <sld:ColorMapEntry label="12,2" quantity="12.2345720377344" color="#1fa188"/>
+              <sld:ColorMapEntry label="12,8" quantity="12.790664454144002" color="#1e9c89"/>
+              <sld:ColorMapEntry label="13,3" quantity="13.3467852324864" color="#1f978b"/>
+              <sld:ColorMapEntry label="13,9" quantity="13.902906010828801" color="#20928c"/>
+              <sld:ColorMapEntry label="14,5" quantity="14.459026789171199" color="#218e8d"/>
+              <sld:ColorMapEntry label="15,0" quantity="15.015147567513601" color="#23898e"/>
+              <sld:ColorMapEntry label="15,6" quantity="15.571268345856003" color="#25848e"/>
+              <sld:ColorMapEntry label="16,1" quantity="16.127360762265599" color="#27808e"/>
+              <sld:ColorMapEntry label="16,7" quantity="16.683481540608003" color="#297b8e"/>
+              <sld:ColorMapEntry label="17,2" quantity="17.2396023189504" color="#2a768e"/>
+              <sld:ColorMapEntry label="17,8" quantity="17.7957230972928" color="#2c718e"/>
+              <sld:ColorMapEntry label="18,4" quantity="18.351843875635204" color="#2e6d8e"/>
+              <sld:ColorMapEntry label="18,9" quantity="18.907964653977601" color="#31688e"/>
+              <sld:ColorMapEntry label="19,5" quantity="19.464085432320001" color="#33638d"/>
+              <sld:ColorMapEntry label="20,0" quantity="20.020177848729602" color="#355e8d"/>
+              <sld:ColorMapEntry label="20,6" quantity="20.576298627071999" color="#38598c"/>
+              <sld:ColorMapEntry label="21,1" quantity="21.132419405414403" color="#3a538b"/>
+              <sld:ColorMapEntry label="21,7" quantity="21.6885401837568" color="#3d4e8a"/>
+              <sld:ColorMapEntry label="22,2" quantity="22.2446609620992" color="#3f4889"/>
+              <sld:ColorMapEntry label="22,8" quantity="22.800781740441604" color="#414287"/>
+              <sld:ColorMapEntry label="23,4" quantity="23.356874156851202" color="#433d84"/>
+              <sld:ColorMapEntry label="23,9" quantity="23.912994935193602" color="#453781"/>
+              <sld:ColorMapEntry label="24,5" quantity="24.469115713536002" color="#46307e"/>
+              <sld:ColorMapEntry label="25,0" quantity="25.025236491878399" color="#472a7a"/>
+              <sld:ColorMapEntry label="25,6" quantity="25.581351597834242" color="#482475"/>
+              <sld:ColorMapEntry label="26,1" quantity="26.137466703790082" color="#481d6f"/>
+              <sld:ColorMapEntry label="26,7" quantity="26.6935846459392" color="#481769"/>
+              <sld:ColorMapEntry label="27,2" quantity="27.249699751895044" color="#471063"/>
+              <sld:ColorMapEntry label="27,8" quantity="27.805817694044162" color="#46085c"/>
+              <sld:ColorMapEntry label="28,4" quantity="28.361932800000002" color="#440154"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>Pressure</sld:Name>
+      <sld:Title/>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#4575b4" quantity="90000" label="90 kPa"/>            
+<ColorMapEntry color="#91bfdb" quantity="94000" label="94 kPa"/>
+<ColorMapEntry color="#e0f3f8" quantity="98000" label="98 kPa"/>
+<ColorMapEntry color="#fee090" quantity="103000" label="103 kPa"/>
+<ColorMapEntry color="#fc8d59" quantity="105000" label="105 kPa"/>
+<ColorMapEntry color="#d73027" quantity="110000" label="110 kPa"/>
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

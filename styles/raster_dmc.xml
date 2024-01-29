@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:sld="http://www.opengis.net/sld"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:gml="http://www.opengis.net/gml"
+    version="1.0.0">
+  <sld:UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>DMC</sld:Name>
+      <sld:Title>DMC</sld:Title>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+
+          <RasterSymbolizer>
+            <ColorMap>
+<ColorMapEntry color="#A0FA8A" quantity="0" label="very low"/>
+<ColorMapEntry color="#fffe5d" quantity="15.7" label="low" />
+<ColorMapEntry color="#f5bd47" quantity="27.9" label="moderate" />
+<ColorMapEntry color="#ec5b3c" quantity="53.1" label="high" />
+<ColorMapEntry color="#a22735" quantity="140.7" label="very high" />
+<ColorMapEntry color="#87319f" quantity="200" label="extreme" />
+
+            </ColorMap>
+          </RasterSymbolizer>
+      
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </sld:UserLayer>
+</sld:StyledLayerDescriptor>

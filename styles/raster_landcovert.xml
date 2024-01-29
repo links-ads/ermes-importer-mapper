@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0" xmlns:sld="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>FUEL MAP</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="values">
+              <sld:ColorMapEntry label="Artificial" color="#d63a3d" quantity="0"/>
+              <sld:ColorMapEntry label="Bare" color="#9a9a9a" quantity="1"/>
+              <sld:ColorMapEntry label="Wetlands" color="#966bc4" quantity="2"/>
+              <sld:ColorMapEntry label="Water" color="#2b50c6" quantity="3"/>
+              <sld:ColorMapEntry label="Grassland" color="#f99f27" quantity="4"/>
+              <sld:ColorMapEntry label="Agricultural" color="#fdd327" quantity="5"/>
+              <sld:ColorMapEntry label="Broadleaves" color="#249801" quantity="6"/>
+              <sld:ColorMapEntry label="Coniferous" color="#086200" quantity="7"/>
+              <sld:ColorMapEntry label="Shrubs" color="#8d8c00" quantity="8"/>
+              <sld:ColorMapEntry label="Ignored" color="#2c2c2c" quantity="255" opacity="0"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>fireline_intensity_mean_1440.0</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="ramp">
+              <sld:ColorMapEntry color="#00ffff" quantity="0" label="0 kW/m"/>
+              <sld:ColorMapEntry color="#00ff00" quantity="500" label="500 kW/m"/>
+              <sld:ColorMapEntry color="#ffff00" quantity="3000" label="3000 kW/m"/>
+              <sld:ColorMapEntry color="#ff8002" quantity="7000" label="7000 kW/m"/>
+              <sld:ColorMapEntry color="#ff0000" quantity="70000" label="70000 kW/m"/>
+              <sld:ColorMapEntry color="#ff01ff" quantity="150000" label="150000 kW/m"/>
+              <sld:ColorMapEntry color="#af00af" quantity="200000" label="200000 kW/m"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>

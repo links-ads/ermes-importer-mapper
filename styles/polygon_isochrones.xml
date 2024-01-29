@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="UTF-8"?><sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0">
+<sld:UserLayer>
+  <sld:LayerFeatureConstraints>
+    <sld:FeatureTypeConstraint/>
+  </sld:LayerFeatureConstraints>
+  <sld:UserStyle>
+    <sld:Name>fire-propagator</sld:Name>
+    <sld:Title>fire-propagator</sld:Title>
+    <sld:FeatureTypeStyle>
+      <sld:Name>group 0</sld:Name>
+      <sld:FeatureTypeName>Feature</sld:FeatureTypeName>
+      <!-- dummy rule for legend title -->
+      <sld:Rule>
+        <sld:Name>fire-propagator</sld:Name>
+        <sld:Title>fire-propagator</sld:Title>
+        <ogc:Filter>
+          <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>time</ogc:PropertyName>
+            <ogc:Literal>-9999</ogc:Literal>
+          </ogc:PropertyIsEqualTo>
+        </ogc:Filter>
+        <sld:PolygonSymbolizer/>
+      </sld:Rule>
+      <!-- dummy rule for legend title -->
+
+      <!-- lolimit: 0, hilimit: 60 -->
+      <sld:Rule>
+        <sld:Name>+1h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>0</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>60</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#ffd400</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#ffd400</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>                           
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 60, hilimit: 120 -->
+      <sld:Rule>
+        <sld:Name>+2h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>60</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>120</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FFCB04</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FFCB04</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 120, hilimit: 180 -->
+      <sld:Rule>
+        <sld:Name>+3h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>120</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>180</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FFC208</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FFC208</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 180, hilimit: 240 -->
+      <sld:Rule>
+        <sld:Name>+4h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>180</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>240</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FFB90C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FFB90C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 240, hilimit: 300 -->
+      <sld:Rule>
+        <sld:Name>+5h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>240</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>300</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FFB010</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FFB010</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 300, hilimit: 360 -->
+      <sld:Rule>
+        <sld:Name>+6h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>300</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>360</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FFA714</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FFA714</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 360, hilimit: 420 -->
+      <sld:Rule>
+        <sld:Name>+7h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>360</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>420</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF9F18</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF9F18</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 420, hilimit: 480 -->
+      <sld:Rule>
+        <sld:Name>+8h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>420</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>480</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF961C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF961C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 480, hilimit: 540 -->
+      <sld:Rule>
+        <sld:Name>+9h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>480</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>540</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF8D20</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF8D20</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 540, hilimit: 600 -->
+      <sld:Rule>
+        <sld:Name>+10h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>540</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>600</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF8424</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF8424</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 600, hilimit: 660 -->
+      <sld:Rule>
+        <sld:Name>+11h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>600</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>660</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF7B28</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF7B28</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 660, hilimit: 720 -->
+      <sld:Rule>
+        <sld:Name>+12h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>660</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>720</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF722C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF722C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 720, hilimit: 780 -->
+      <sld:Rule>
+        <sld:Name>+13h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>720</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>780</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF6A30</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF6A30</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 780, hilimit: 840 -->
+      <sld:Rule>
+        <sld:Name>+14h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>780</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>840</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF6134</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF6134</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 840, hilimit: 900 -->
+      <sld:Rule>
+        <sld:Name>+15h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>840</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>900</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF5838</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF5838</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 900, hilimit: 960 -->
+      <sld:Rule>
+        <sld:Name>+16h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>900</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>960</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF4F3C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF4F3C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 960, hilimit: 1020 -->
+      <sld:Rule>
+        <sld:Name>+17h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>960</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1020</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF4640</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF4640</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1020, hilimit: 1080 -->
+      <sld:Rule>
+        <sld:Name>+18h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1020</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1080</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF3D44</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF3D44</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1080, hilimit: 1140 -->
+      <sld:Rule>
+        <sld:Name>+19h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1080</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1140</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF3548</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF3548</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1140, hilimit: 1200 -->
+      <sld:Rule>
+        <sld:Name>+20h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1140</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1200</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF2C4C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF2C4C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1200, hilimit: 1260 -->
+      <sld:Rule>
+        <sld:Name>+21h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1200</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1260</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF2350</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF2350</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1260, hilimit: 1320 -->
+      <sld:Rule>
+        <sld:Name>+22h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1260</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1320</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF1A54</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF1A54</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1320, hilimit: 1380 -->
+      <sld:Rule>
+        <sld:Name>+23h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1320</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1380</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF1158</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF1158</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1380, hilimit: 1440 -->
+      <sld:Rule>
+        <sld:Name>+24h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1380</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1440</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF085C</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF085C</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+
+
+
+      <!-- lolimit: 1440, hilimit: 15000 -->
+      <sld:Rule>
+        <sld:Name>>24h</sld:Name>
+        <ogc:Filter>
+          <ogc:And>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>1440</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsLessThanOrEqualTo>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:Literal>15000</ogc:Literal>
+            </ogc:PropertyIsLessThanOrEqualTo>
+
+          </ogc:And>
+        </ogc:Filter>
+        <sld:LineSymbolizer>
+          <sld:Stroke>
+            <sld:CssParameter name="stroke">#FF0061</sld:CssParameter>
+            <sld:CssParameter name="stroke-width">4</sld:CssParameter>
+            <sld:CssParameter name="stroke-opacity">0.7</sld:CssParameter>
+          </sld:Stroke>
+          <VendorOption name="inclusion">mapOnly</VendorOption>
+        </sld:LineSymbolizer>
+        <sld:PolygonSymbolizer>
+          <sld:Fill>
+            <sld:CssParameter name="fill">#FF0061</sld:CssParameter>
+          </sld:Fill>
+          <VendorOption name="inclusion">legendOnly</VendorOption>
+        </sld:PolygonSymbolizer>
+      </sld:Rule>
+
+      <!-- <sld:VendorOption name="composite">copy, 0.7</sld:VendorOption> -->
+    </sld:FeatureTypeStyle>
+    <FeatureTypeStyle>
+      <Rule>
+        <Name>rule2</Name>
+
+        <TextSymbolizer>
+          <Label>
+             <Function name="parseInt">
+            <ogc:Div>
+              <ogc:PropertyName>time</ogc:PropertyName>
+              <ogc:PropertyName>60</ogc:PropertyName>
+            </ogc:Div>
+            </Function>
+          </Label>
+
+          <Font>
+            <CssParameter name="font-family">Arial</CssParameter>
+            <CssParameter name="font-style">Normal</CssParameter>
+            <CssParameter name="font-size">10</CssParameter>
+          </Font>
+
+          <LabelPlacement>
+            <LinePlacement></LinePlacement>
+          </LabelPlacement>
+          <Halo>
+            <Radius>
+              <ogc:Literal>2</ogc:Literal>
+            </Radius>
+            <Fill>
+              <CssParameter name="fill">#FFFFFF</CssParameter>
+              <CssParameter name="fill-opacity">0.85</CssParameter>
+            </Fill>
+          </Halo>
+
+          <Fill>
+            <CssParameter name="fill">#000000</CssParameter>
+          </Fill>
+
+          <VendorOption name="followLine">true</VendorOption>
+          <VendorOption name="repeat">200</VendorOption>
+          <VendorOption name="maxDisplacement">50</VendorOption>
+          <VendorOption name="maxAngleDelta">30</VendorOption>
+          <VendorOption name="group">no</VendorOption>
+
+        </TextSymbolizer>
+      </Rule>
+      <VendorOption name="inclusion">mapOnly</VendorOption>
+    </FeatureTypeStyle>
+
+  </sld:UserStyle>
+</sld:UserLayer>
+</sld:StyledLayerDescriptor>

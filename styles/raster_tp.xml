@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" version="1.0.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sld="http://www.opengis.net/sld">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>fc202208150000_ENS — tp copy</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="intervals">
+              <sld:ColorMapEntry opacity="0" label="&lt;= 0,1" color="#deebd0" quantity="0.10000000000000001"/>
+              <sld:ColorMapEntry label="0,1 - 1" color="#f3fcea" quantity="1"/>
+              <sld:ColorMapEntry label="1,0 - 2,0" color="#cbebad" quantity="2"/>
+              <sld:ColorMapEntry label="2,0 - 5,0" color="#87ca43" quantity="5"/>
+              <sld:ColorMapEntry label="5,0 - 10,0" color="#cff8ff" quantity="10"/>
+              <sld:ColorMapEntry label="10,0 - 15,0" color="#8ed2ff" quantity="15"/>
+              <sld:ColorMapEntry label="15,0 - 20,0" color="#67caff" quantity="20"/>
+              <sld:ColorMapEntry label="20,0 - 30,0" color="#3ba4ff" quantity="30"/>
+              <sld:ColorMapEntry label="30,0 - 40,0" color="#fff09b" quantity="40"/>
+              <sld:ColorMapEntry label="40,0 - 50,0" color="#ff9c32" quantity="50"/>
+              <sld:ColorMapEntry label="50,0 - 100,0" color="#ff640b" quantity="100"/>
+              <sld:ColorMapEntry label="100,0 - 200,0" color="#d42c16" quantity="200"/>
+              <sld:ColorMapEntry label="200,0 - 300,0" color="#ae0a25" quantity="300"/>
+              <sld:ColorMapEntry label="> 300,0" color="#ff00ff" quantity="1000000"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>
