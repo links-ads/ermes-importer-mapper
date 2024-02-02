@@ -1,75 +1,76 @@
 version: "3"
 
 volumes:
-    psgdata:
-          driver: local
-          driver_opts:
-              o: bind
-              type: none
-              device: ${VOL_DIR}/psgdata
-    gsvdata:
-          driver: local
-          driver_opts:
-              o: bind
-              type: none
-              device: ${VOL_DIR}/gsvdata
+  psgdata:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${VOL_DIR}/psgdata
+  gsvdata:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${VOL_DIR}/gsvdata
 
 services:
-    database:
-        image: kartoza/postgis:13-3.1
-        env_file: .env
-        environment:
-            - POSTGRES_DB=${DATABASE_NAME}
-            - POSTGRES_USER=${DATABASE_USER}
-            - POSTGRES_PASSWORD=${DATABASE_PASS}
-            - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
-        volumes:
-            - psgdata:/var/lib/postgis/data
-        restart: unless-stopped
+  database:
+    image: kartoza/postgis:13-3.1
+    env_file: .env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASS}
+      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
+    volumes:
+      - psgdata:/var/lib/postgis/data
+    restart: unless-stopped
 
-    geoserver:
-        image: kartoza/geoserver:2.21.1
-        env_file: .env
-        restart: unless-stopped
-        environment:
-            - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
-            - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
-            - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
-            - GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}
-            - GEOWEBCACHE_CACHE_DIR=${GEOWEBCACHE_CACHE_DIR}
-            - INITIAL_MEMORY=${INITIAL_MEMORY}
-            - MAXIMUM_MEMORY=${MAXIMUM_MEMORY}
-            - STABLE_EXTENSIONS=netcdf-plugin,wmts-multi-dimensional-plugin,wps-download-plugin
-            - COMMUNITY_EXTENSIONS=ncwms-plugin
-            - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_HOST}
-            - EXISTING_DATA_DIR=true
-        volumes:
-            - gsvdata:${GEOSERVER_DATA_DIR}:rw
-        depends_on:
-            - database
+  geoserver:
+    image: kartoza/geoserver:2.21.1
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}
+      - GEOWEBCACHE_CACHE_DIR=${GEOWEBCACHE_CACHE_DIR}
+      - INITIAL_MEMORY=${INITIAL_MEMORY}
+      - MAXIMUM_MEMORY=${MAXIMUM_MEMORY}
+      - STABLE_EXTENSIONS=netcdf-plugin,wmts-multi-dimensional-plugin,wps-download-plugin
+      - COMMUNITY_EXTENSIONS=ncwms-plugin
+      - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_HOST}
+      - EXISTING_DATA_DIR=true
+    volumes:
+      - gsvdata:${GEOSERVER_DATA_DIR}:rw
+    depends_on:
+      - database
 
-    importer:
-        build:
-            context: .
-            dockerfile: containers/importer/Dockerfile
-            args:
-                - TARGET=${TARGET}
-        image: links/importer:${TARGET}
-        env_file: .env
-        command: importer
-        volumes:
-            - gsvdata:/opt/geoserver/data_dir:rw
-        depends_on:
-            - database
-        restart: unless-stopped
+  importer:
+    build:
+      context: .
+      dockerfile: containers/importer/Dockerfile
+      args:
+        - TARGET=${TARGET}
+    image: links/importer:${TARGET}
+    env_file: .env
+    command: importer
+    volumes:
+      - gsvdata:/opt/geoserver/data_dir:rw
+    depends_on:
+      - database
+    restart: unless-stopped
 
-    webserver:
-        image: links/importer:${TARGET}
-        env_file: .env
-        command: webserver
-        volumes:
-            - gsvdata:/opt/geoserver/data_dir
-        depends_on:
-            - database
-            - geoserver
-        restart: unless-stopped
+  webserver:
+    image: links/importer:${TARGET}
+    env_file: .env
+    command: webserver
+    volumes:
+      - gsvdata:/opt/geoserver/data_dir
+    depends_on:
+      - importer
+      - database
+      - geoserver
+    restart: unless-stopped

@@ -88,6 +88,10 @@ The repository can be deployed following these steps:
 
 8. **Optional**: Specific settings for each layer can be adjusted from the DB table `layer-settings`.
 
+> **Note**
+> 
+> For a clean start, use the command `make down TARGET=dev ARGS="-v --remove-orphans"`
+
 ### Styles
 
 Styles are used to control the appearance of geospatial data. They need to be set up through the [GUI](https://docs.geoserver.org/latest/en/user/styling/webadmin/index.html). Styles used are uploaded in `importer/styles`.
