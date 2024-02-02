@@ -18,8 +18,6 @@ services:
     database:
         image: kartoza/postgis:13-3.1
         env_file: .env
-        ports:
-            - "${DB_PORT_EXPOSE}:5432"
         environment:
             - POSTGRES_DB=${DATABASE_NAME}
             - POSTGRES_USER=${DATABASE_USER}
@@ -30,10 +28,8 @@ services:
         restart: unless-stopped
 
     geoserver:
-        image: kartoza/geoserver:$VERSION
+        image: kartoza/geoserver:2.21.1
         env_file: .env
-        ports:
-            - "${GEOSERVER_PORT}:8080"
         restart: unless-stopped
         environment:
             - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
@@ -57,8 +53,8 @@ services:
             context: .
             dockerfile: containers/importer/Dockerfile
             args:
-                - TARGET=${BUILD_TARGET}
-        image: iam/importer:${BUILD_TARGET}
+                - TARGET=${TARGET}
+        image: links/importer:${TARGET}
         env_file: .env
         command: importer
         volumes:
@@ -68,18 +64,11 @@ services:
         restart: unless-stopped
 
     webserver:
-        build:
-            context: .
-            dockerfile: containers/importer/Dockerfile
-            args:
-              - TARGET=${BUILD_TARGET}
-        image: iam/webserver:${BUILD_TARGET}
+        image: links/importer:${TARGET}
         env_file: .env
         command: webserver
         volumes:
             - gsvdata:/opt/geoserver/data_dir
-        ports:
-            - "${WS_PORT}:7500"
         depends_on:
             - database
             - geoserver

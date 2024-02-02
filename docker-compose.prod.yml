@@ -1,1 +1,14 @@
 version: "3"
+
+services:
+  database:
+    ports:
+      - "127.0.0.1:${DB_PORT_EXPOSE}:5432"
+  
+  geoserver:
+    ports:
+      - "127.0.0.1:${GEOSERVER_PORT}:8080"
+  
+  webserver:
+    ports:
+      - "127.0.0.1:${WS_PORT}:7500"

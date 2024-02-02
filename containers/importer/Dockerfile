@@ -22,15 +22,10 @@ RUN pip3 install --upgrade pip
 RUN cd requirements && python3 -m pip install -r requirements.$TARGET.txt --no-cache-dir
 
 # copy main library files
-COPY setup.py alembic.ini ./
-COPY LICENSE README.md ./
-COPY settings/ settings/
-COPY importer/ importer/
+COPY pyproject.toml alembic.ini LICENSE README.md ./
+COPY src/ src/
 COPY migrations/ migrations/
 RUN pip install -e .
-
-# copy the .env file
-COPY env/$TARGET.env ./.env
 
 # copy the main entrypoint and make it executable
 COPY containers/importer/wait.py /

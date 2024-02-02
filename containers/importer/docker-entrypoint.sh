@@ -24,7 +24,7 @@ cmd_webserver() {
     echo "Applying migrations..."
     alembic upgrade head
     echo "Starting webserver..."
-    uvicorn importer.asgi:app --host 0.0.0.0 --port 7500 # --root-path ${ROOT_PATH:-/}
+    uvicorn importer.asgi:app --host 0.0.0.0 --port 7500 --root-path ${ROOT_PATH:-/}
     exit $?
 }
 

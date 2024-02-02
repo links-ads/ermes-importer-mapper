@@ -63,8 +63,9 @@ test = [
 [tool.setuptools]
 package-dir = { "" = "src" }
 
-# [tool.setuptools.dynamic]
-# version = { attr = "package_name.__version__" }
+[tool.setuptools.dynamic]
+version = { attr = "importer.__version__" }
+dependencies = {file = ["requirements/requirements.txt"]}
 
 [tool.black]
 line-length = 119
