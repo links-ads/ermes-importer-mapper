@@ -28,7 +28,7 @@ services:
         restart: unless-stopped
 
     geoserver:
-        image: kartoza/geoserver:2.21.1
+        image: kartoza/geoserver:${GEOSERVER_VERSION}
         env_file: .env
         restart: unless-stopped
         environment:
