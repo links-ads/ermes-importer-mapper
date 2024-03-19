@@ -13,12 +13,14 @@ from importer.settings.instance import settings
 
 def get_resources(
     session: Session,
+    workspace: str,
     datatype_ids: Optional[List[str]] = None,
     resource_id: Optional[str] = None,
     layer_name: Optional[str] = None,
     order_by: Optional[str] = None,
 ) -> List[GeoserverResource]:
     statement = session.query(GeoserverResource)
+    statement = statement.filter(GeoserverResource.workspace == workspace)
     if datatype_ids:
         statement = statement.filter(GeoserverResource.datatype_id.in_(datatype_ids))
     if resource_id:
@@ -63,11 +65,11 @@ def prepare_resource(filepath: str):
     return f"{temp_filename}{file_extension}"
 
 
-def get_resource_from_dl(resource_id: str):
+def get_resource_from_dl(organization: str, resource_id: str):
     temp_folder = settings.get_temp_folder()
     driver = DataLakeDriver()
 
-    f_, filename = driver.download_resource(resource_id=resource_id)
+    f_, filename = driver.download_resource(organization=organization, resource_id=resource_id)
     _, file_extension = os.path.splitext(filename)
     temp_filename = f"{get_temporary_name(filename)}{file_extension}"  # generate random filename w/ extension
     dest_filepath = os.path.join(temp_folder, temp_filename)  # temp filepath w/ extension

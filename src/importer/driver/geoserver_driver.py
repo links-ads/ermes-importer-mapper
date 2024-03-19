@@ -76,8 +76,8 @@ class GeoserverDriver:
             LOG.info(f"Layer {layer_name} successfully published from table!")
             err_status = None
             # if datatype has time dimension, update the featuretype with time dim
-            if self.dsm.has_time_dimension(datatype):
-                time_attribute = self.dsm.get_time_attribute(datatype)
+            if self.dsm.has_time_dimension(workspace, datatype):
+                time_attribute = self.dsm.get_time_attribute(workspace, datatype)
                 err_status = self.geoserver.publish_vector_time_dimensions(workspace, layer_name, time_attribute)
                 ts = self.dsm.get_timestamps_from_vector(layer_name, time_attribute)
                 if ts:
@@ -98,7 +98,7 @@ class GeoserverDriver:
 
     def style_layer(self, workspace: str, layer_name: str, datatype: str):
         try:
-            style = self.dsm.get_layer_style(datatype_id=datatype)
+            style = self.dsm.get_layer_style(workspace=workspace, datatype_id=datatype)
         except AttributeError:
             LOG.info(f"Style for datatype id {datatype} not found")
             style = None
@@ -122,9 +122,9 @@ class GeoserverDriver:
         self, workspace: str, layer_name: str, storage_location: str, datatype: str, start_time: datetime, mosaic: bool
     ) -> List[LayerPublicationStatus]:
         self.create_workspace(workspace)
-        params = self.dsm.get_parameters(datatype)
+        params = self.dsm.get_parameters(workspace, datatype)
         LOG.info(f"Publishing layer {layer_name} from location {storage_location}")
-        netcdf_dt_rewrite = self.dsm.get_netcdf_layers(master_datatype_id=datatype)
+        netcdf_dt_rewrite = self.dsm.get_netcdf_layers(workspace=workspace, master_datatype_id=datatype)
         result = self.geoserver.create_coveragestore_patched(
             path=storage_location,
             datatype=datatype,

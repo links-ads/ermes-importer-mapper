@@ -1,12 +1,13 @@
-from importer.database.schemas import DownloadedDataSchema, MessageSchema
-from typing import List
-from importer.driver.datalake_driver import DataLakeDriver
-import io
-import os
-import zipfile
-import logging
 import errno
+import io
+import logging
+import os
 import re
+import zipfile
+from typing import List
+
+from importer.database.schemas import DownloadedDataSchema, MessageSchema
+from importer.driver.datalake_driver import DataLakeDriver
 
 LOG = logging.getLogger(__name__)
 # 'https://datalake-test.shelter-project.cloud/dataset/51a6abe4-8f3c-441a-9efe-f9c62bd47720/resource/9630c901-dc87-42c7-a894-a104aa18c77b/download/58c07c0c-ba67-42c0-bc7c-ca47291c275c5c32002_links_burned_area_delineation_0_20190718t000000_201.tiff'
@@ -39,7 +40,7 @@ class DataRetrievalManager:
     def __init__(self):
         self.driver = DataLakeDriver()
 
-    def download_data(self, message_schema: MessageSchema) -> List[DownloadedDataSchema]:
+    def download_data(self, project_name, message_schema: MessageSchema) -> List[DownloadedDataSchema]:
         """Retrieve data contained in the received message from their urls.
         Returns a list containing the temporary folder where files were saved
         :param dict message: message coming from message bus, containing the
@@ -47,7 +48,7 @@ class DataRetrievalManager:
         """
         data_list = []
 
-        r, url = self.driver.get(message_schema.id, message_schema.url)  # use driver to download data
+        r, url = self.driver.get(project_name, message_schema.id, message_schema.url)  # use driver to download data
         filename = url.split("/")[-1]
         extension = filename.split(".")[-1]
         tmp_path = os.path.join("temp", message_schema.id)  # create a temporary folder to save files to
@@ -77,6 +78,7 @@ class DataRetrievalManager:
                 LOG.error(f"File with extension {extension} not supported")
             store_name = "postgis_db" if isdbstored else None
             data = DownloadedDataSchema(
+                workspace=project_name,
                 datatype_id=message_schema.datatype_id,
                 store_name=store_name,
                 start=message_schema.start_date,

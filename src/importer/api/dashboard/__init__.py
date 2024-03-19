@@ -27,6 +27,7 @@ router = APIRouter()
 
 @router.get("/resources", response_model=List[GeoserverResourceSchema], status_code=200)
 def get_resources(
+    workspace: str,
     datatype_ids: Optional[List[str]] = Query(None),
     resource_id: Optional[str] = Query(None),
     include_deleted: Optional[bool] = False,
@@ -40,7 +41,7 @@ def get_resources(
     :rtype: List[GeoserverResourceSchema]
     """
     resources = domain.get_resources(
-        db, datatype_ids=datatype_ids, resource_id=resource_id, include_deleted=include_deleted
+        db, workspace, datatype_ids=datatype_ids, resource_id=resource_id, include_deleted=include_deleted
     )
     return resources
 
@@ -74,6 +75,7 @@ def __get_filtered_ts(timeseries, start, end):
 
 @router.get("/layers", status_code=200)
 def get_layers(
+    workspace: str,
     datatype_ids: Optional[List[str]] = Query(None),
     bbox: Optional[str] = Query(None),
     start: Optional[datetime] = Query(None),
@@ -102,6 +104,7 @@ def get_layers(
     """
     resources = domain.get_resources(
         db,
+        workspace=workspace,
         datatype_ids=datatype_ids,
         bbox=bbox,
         start=start,
@@ -121,7 +124,7 @@ def get_layers(
                 "datatype_id": key,
                 "details": (
                     {
-                        "name": f"{resource.workspace_name}:{resource.layer_name}",
+                        "name": f"{resource.workspace}:{resource.layer_name}",
                         "timestamps": __get_filtered_ts(resource.timestamps, start, end),
                         "created_at": resource.created_at.isoformat(timespec="seconds"),
                         "request_code": resource.request_code,
@@ -135,53 +138,6 @@ def get_layers(
     }
     LOG.info("Response ready")
     return result
-
-
-# @router.get("/time_series", status_code=200)
-# def get_time_series(params: TimeSeriesSchema = Depends(),
-#                     db: Session = Depends(db_webserver)):
-#     """Retrieves the time series of the requested attribute for layers denoted by the specified datatype_id,
-# at the "point" position
-
-#     :param datatype_id: datatype_id of the layers to retrieve the attribute time series from
-#     :type datatype_id: str
-#     :param point: point string in the form "point-x,point-y"
-#     :type point: str
-#     :param attribute: name of the column containing the requested attribute
-#     :type attribute: str
-#     :param start: start date in the form 'YYYY-MM-DD HH:MM:SS' filter resources with start_date >= start,
-# defaults to Query(None)
-#     :type start: Optional[datetime], optional
-#     :param end: end date in the form 'YYYY-MM-DD HH:MM:SS' filter resources with end_date <= end,
-# defaults to Query(None)
-#     :type end: Optional[datetime], optional
-#     :param geom_col: name of the db table column containing the geometry
-#     :type geom_col: str
-#     :param date_start_col: name of the db table column containing the activation start date
-#     :type date_start_col: str
-#     :param date_end_col: name of the db table column containing the activation end date
-#     :type date_end_col: str
-#     :param creation_date_col: name of the column to use when choosing between multiple table rows
-# with the same start_date.
-#                               Pick always the row with the most recent creation_date_col
-#     :type creation_date_col: str
-#     :param db: DB session instance, defaults to Depends(db_webserver)
-#     :type db: Session, optional
-#     :return: time series of the attribute values at "point" location
-#     :rtype: json
-
-#     Example: I have many GeoJSON files that form a time series saved on the PostGIS db, each containing polygons
-# with certain values over a specified area.
-#     I want to get the series of the "temperature" value of the point 15.18,41.68 from date 2020-02-04 00:00:00
-# to date 2020-02-11 23:59:59.
-#     Supposing that the GeoJSON files have their geometries saved in the "geometry" column, their start reference
-# date saved in the "date_start" column and
-#     their end reference date in the "date_end" column, specifying all these parameters returns me a dataframe with
-# all the values of the "temperature" variable
-#     contained in the GeoJSON files for the requested time period, at the specified point location.
-# The "creation_date_col" is used when multiple files span the
-#     same time (to be more precise, have the same "date_start"), only the most recent is returned.
-#     """
 
 
 @router.get("/timeseries", status_code=200)
@@ -246,7 +202,9 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     """
 
     data_storage_manager = DataStorageManager()
-    layer_settings = data_storage_manager.get_layer_settings(db, datatype_id=params.datatype_id)
+    layer_settings = data_storage_manager.get_layer_settings(
+        db, project=params.workspace, datatype_id=params.datatype_id
+    )
 
     if not layer_settings:
         raise HTTPException(status_code=404, detail="Settings for those parameters not found in DB")
@@ -255,6 +213,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     if params.request_code:
         resources = domain.get_resources(
             db,
+            workspace=params.workspace,
             datatype_ids=[params.datatype_id],
             request_codes=[params.request_code],
             layer_name=params.layer_name,
@@ -265,7 +224,12 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     else:
         LOG.info("no request code")
         resources = domain.get_resources(
-            db, datatype_ids=[params.datatype_id], layer_name=params.layer_name, start=params.start, end=params.end
+            db,
+            workspace=params.workspace,
+            datatype_ids=[params.datatype_id],
+            layer_name=params.layer_name,
+            start=params.start,
+            end=params.end,
         )
 
     layer_names = [resource.layer_name for resource in resources]
@@ -308,7 +272,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
         try:
             timeseries = asyncio.run(
                 driver.get_timeseries_from_netcdf(
-                    workspace=settings.geoserver_workspace,
+                    workspace=params.workspace,
                     layers=layer_names,
                     bbox=domain.get_bbox_from_point(params.point),
                     crs=params.crs,
@@ -326,7 +290,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
         try:
             timeseries = asyncio.run(
                 driver.get_timeseries_from_featureinfo(
-                    workspace=settings.geoserver_workspace,
+                    workspace=params.workspace,
                     resources=resources,
                     bbox=domain.get_bbox_from_point(params.point),
                     crs=params.crs,
@@ -376,28 +340,28 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     return data
 
 
-@router.get("/check_layers", response_model=List[GeoserverResourceSchema], status_code=200)
-def get_check_layers(delete_missings: Optional[bool] = False, db: Session = Depends(db_webserver)):
-    """Check if all the files are actually available,
+# TODO: add workspace parameter
+# @router.get("/check_layers", response_model=List[GeoserverResourceSchema], status_code=200)
+# def get_check_layers(delete_missings: Optional[bool] = False, db: Session = Depends(db_webserver)):
+#     """Check if all the files are actually available,
 
-    :param delete_missings: delete all the layers not available
-    :type delete_missings: boolean
-    :param db: DB session instance, defaults to Depends(db_webserver)
-    :type db: Session, optional
-    :return: list of resource models to be serialized
-    :rtype: List[GeoserverResourceSchema]
-    """
-    geoserver_manager = GeoserverManager()
-    data_storage_manager = DataStorageManager()
-    resources = domain.get_resources(db, include_deleted=False)
-    missing_layers = []
-    for res in resources:
-        if (res.storage_location) and (not os.path.exists(res.storage_location)):
-            missing_layers.append(res)
-    LOG.info(f"Missing layers: {missing_layers}")
-    if delete_missings:
-        LOG.info("deleting layers...")
-        reslayercount = data_storage_manager.countlayers_perresource(session=db, resources=missing_layers)
-        geoserver_manager.delete(resources=missing_layers, resourcelayercount=reslayercount)
-    return missing_layers
-    return missing_layers
+#     :param delete_missings: delete all the layers not available
+#     :type delete_missings: boolean
+#     :param db: DB session instance, defaults to Depends(db_webserver)
+#     :type db: Session, optional
+#     :return: list of resource models to be serialized
+#     :rtype: List[GeoserverResourceSchema]
+#     """
+#     geoserver_manager = GeoserverManager()
+#     data_storage_manager = DataStorageManager()
+#     resources = domain.get_resources(db, include_deleted=False)
+#     missing_layers = []
+#     for res in resources:
+#         if (res.storage_location) and (not os.path.exists(res.storage_location)):
+#             missing_layers.append(res)
+#     LOG.info(f"Missing layers: {missing_layers}")
+#     if delete_missings:
+#         LOG.info("deleting layers...")
+#         reslayercount = data_storage_manager.countlayers_perresource(session=db, resources=missing_layers)
+#         geoserver_manager.delete(resources=missing_layers, resourcelayercount=reslayercount)
+#     return missing_layers

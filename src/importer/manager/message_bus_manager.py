@@ -67,7 +67,7 @@ class MessageBusManager:
             body = {
                 "datatype_id": pubstatus.datatype,
                 "status_code": 200 if pubstatus.success else 500,
-                "name": f"{resource.workspace_name}:{pubstatus.layer_name}",
+                "name": f"{resource.workspace}:{pubstatus.layer_name}",
                 "message": "Layers imported successfully" if pubstatus.success else pubstatus.exception,
                 "type": "layer",
                 "urls": [],

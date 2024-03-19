@@ -438,7 +438,7 @@ class Consumer:
             LOG.warning(f"Map Request message is in wrong format - {str(e)}")
             message_as_dict = body
             # raise
-        self._callback(message_as_dict)
+        self._callback(message_as_dict, basic_deliver, properties)
         if self._received == 0:
             LOG.debug("Sending ack")
             self._channel.basic_ack(basic_deliver.delivery_tag, multiple=True)

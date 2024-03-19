@@ -24,7 +24,7 @@ def upgrade():
         "geoserver_resource",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("datatype_id", sa.String(length=64), nullable=False),
-        sa.Column("workspace_name", sa.String(length=64), nullable=False),
+        sa.Column("workspace", sa.String(length=64), nullable=False),
         sa.Column("store_name", sa.String(length=64), nullable=False),
         sa.Column("layer_name", sa.String(length=128), nullable=False),
         sa.Column("storage_location", sa.String(length=256), nullable=True),
@@ -48,6 +48,7 @@ def upgrade():
 
     op.create_table(
         "layer_settings",
+        sa.Column("project", sa.String(64), nullable=False),
         sa.Column("master_datatype_id", sa.String(64), server_default=None),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("datatype_id", sa.String(length=64), nullable=False),

@@ -17,12 +17,12 @@ execute() {
     echo "Setting $Target environment..."
     # save old env path and link new one
     OldEnv=$(readlink .env)
-    ln -sf env/$Target.env .env
+    ln -sf envs/$Target.env .env
     # set project name variable
     ProjectName="importer-$Target"
     ProjectName=${ProjectName%"-prod"}
     # execute docker-compose commands
-    echo "Executing action '$Action' for target: $BUILD_TARGET"
+    echo "Executing action '$Action' for target: $TARGET"
     docker-compose -p $ProjectName \
         -f docker-compose.yml \
         -f docker-compose.$Target.yml $Action $@
