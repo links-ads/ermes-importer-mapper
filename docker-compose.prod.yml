@@ -1,5 +1,20 @@
 version: "3"
 
+volumes:
+  psgdata:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${VOL_DIR}/psgdata
+  gsvdata:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${VOL_DIR}/gsvdata
+
+
 services:
   database:
     ports:

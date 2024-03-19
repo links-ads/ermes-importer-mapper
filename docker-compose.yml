@@ -1,40 +1,27 @@
 version: "3"
 
-volumes:
-  psgdata:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${VOL_DIR}/psgdata
-  gsvdata:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${VOL_DIR}/gsvdata
-
 services:
   database:
-    image: kartoza/postgis:13-3.1
-    env_file: .env
+    image: kartoza/postgis:16-3.4
+    volumes:
+      - psgdata:/var/lib/postgresql
     environment:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASS}
-      - POSTGRES_MULTIPLE_EXTENSIONS=postgis,hstore,postgis_topology,postgis_raster,pgrouting
-    volumes:
-      - psgdata:/var/lib/postgis/data
+      - POSTGRES_PASS=${DATABASE_PASS}
+      - ALLOW_IP_RANGE=0.0.0.0/0
+      - FORCE_SSL=TRUE
     restart: unless-stopped
+    healthcheck:
+      test: "PGPASSWORD=${DATABASE_PASS} pg_isready -h 127.0.0.1 -U ${DATABASE_USER} -d ${DATABASE_NAME}"
 
   geoserver:
-    image: kartoza/geoserver:2.24.1
-    env_file: .env
+    image: kartoza/geoserver:2.24.2
     restart: unless-stopped
     environment:
       - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
-      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
-      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=admintest
+      - GEOSERVER_ADMIN_PASSWORD=geoservertest
       - GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}
       - GEOWEBCACHE_CACHE_DIR=${GEOWEBCACHE_CACHE_DIR}
       - INITIAL_MEMORY=${INITIAL_MEMORY}
