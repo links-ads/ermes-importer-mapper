@@ -55,6 +55,9 @@ class ProjectSettings(BaseSettings):
     geoserver_admin_user: str
     geoserver_admin_password: str
     geoserver_data_dir: str
+    use_https: bool = False
+    geoserver_host: str
+    geoserver_port: str
     geoserver_workspace: str = "general"
     geoserver_tif_folder: str = "geotiff"
     geoserver_imagemosaic_folder: str = "imagemosaic"
@@ -62,6 +65,10 @@ class ProjectSettings(BaseSettings):
     @property
     def app_version(self):
         return __version__
+
+    def get_service_url(self):
+        protocol = "https" if self.use_https else "http"
+        return f"{protocol}://{self.geoserver_host}:{self.geoserver_port}/geoserver"
 
     def get_rabbitmq_consumer_routing(self):
         return {

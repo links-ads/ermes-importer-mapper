@@ -17,12 +17,11 @@ from importer.settings.instance import settings
 from importer.util.datetimeutils import isoformat_Z, set_utc_default_tz
 
 LOG = logging.getLogger(__name__)
-GEOSERVER_PORT = os.environ.get("GEOSERVER_PORT")
 
 
 class GeoserverDriver:
     def __init__(self):
-        self.service_url = f"http://172.17.0.1:{GEOSERVER_PORT}/geoserver"
+        self.service_url = settings.get_service_url()
         self.geoserver = GeoserverREST(
             service_url=self.service_url,
             username=settings.geoserver_admin_user,
