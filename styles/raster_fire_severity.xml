@@ -16,12 +16,15 @@
 
           <RasterSymbolizer>
             <ColorMap>
-<ColorMapEntry color="#fcfdbf" quantity="0" label="Unburned" />
-<ColorMapEntry color="#fea36f" quantity="1" label="Low Severity"  />
-<ColorMapEntry color="#e14d66" quantity="2" label="Moderate-low Severity"  />
-<ColorMapEntry color="#922b81" quantity="3" label="Moderate-high Severity"  />
-<ColorMapEntry color="#000004" quantity="4" label="High Severity"  />
+<ColorMapEntry color="#fcfdbf" quantity="0" opacity="0" label="Unburned (0)" />
+<ColorMapEntry color="#fea36f" quantity="1" label="Low Severity (1)"  />
+<ColorMapEntry color="#e14d66" quantity="2" label="Moderate-low Severity (2)"  />
+<ColorMapEntry color="#922b81" quantity="3" label="Moderate-high Severity (3)"  />
+<ColorMapEntry color="#000004" quantity="4" label="High Severity (4)"  />
             </ColorMap>
+   <sld:ContrastEnhancement/>
+   <sld:VendorOption name="labelInFeatureInfo">add</sld:VendorOption>
+   <sld:VendorOption name="labelAttributeName">severity</sld:VendorOption>
           </RasterSymbolizer>
       
         </sld:Rule>

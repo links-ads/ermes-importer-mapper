@@ -16,9 +16,12 @@
 
           <RasterSymbolizer>
             <ColorMap>
-<ColorMapEntry color="#ffffff" quantity="0" opacity="0"/>
-<ColorMapEntry color="#b30000" quantity="1" opacity="1" label="Burned area"/>
+<ColorMapEntry color="#ffffff" quantity="0" opacity="0" label="Unburned (0)"/>
+<ColorMapEntry color="#b30000" quantity="1" opacity="1" label="Burned area (1)"/>
             </ColorMap>
+   <sld:ContrastEnhancement/>
+   <VendorOption name="labelInFeatureInfo">replace</VendorOption>
+   <VendorOption name="labelAttributeName">Burned</VendorOption>
           </RasterSymbolizer>
       
         </sld:Rule>

@@ -16,8 +16,8 @@
 
           <RasterSymbolizer>
             <ColorMap>
-<ColorMapEntry color="#ffffff" quantity="0" opacity="0" label="Not flooded area"/>
-<ColorMapEntry color="#004187" quantity="1" opacity="1" label="Flooded area"/>
+<ColorMapEntry color="#ffffff" quantity="0" opacity="0" label="Not flooded area (0)"/>
+<ColorMapEntry color="#004187" quantity="1" opacity="1" label="Flooded area (1)"/>
             </ColorMap>
           </RasterSymbolizer>
       
