@@ -28,6 +28,9 @@ class ProjectSettings(BaseSettings):
     rabbitmq_port: str
     rabbitmq_user: str
     rabbitmq_pass: str
+    rabbitmq_ca_cert_file: str
+    rabbitmq_cert_file: str
+    rabbitmq_key_file: str
     rabbitmq_vhost: str
 
     rabbitmq_exchange: str

@@ -22,6 +22,9 @@ class MessageBusManager:
         self.broker_port = settings.rabbitmq_port
         self.broker_user = settings.rabbitmq_user
         self.broker_pass = settings.rabbitmq_pass
+        self.ca_cert_file = settings.rabbitmq_ca_cert_file
+        self.cert_file = settings.rabbitmq_cert_file
+        self.key_file = settings.rabbitmq_key_file
         self.broker_vhost = settings.rabbitmq_vhost
         self.consumer_routing = settings.get_rabbitmq_consumer_routing()
 
@@ -34,7 +37,13 @@ class MessageBusManager:
 
     def get_consumer(self, callback):
         rabbitmq_consumer = Consumer(
-            self.broker_host, self.broker_port, self.broker_user, self.broker_pass, self.broker_vhost, callback
+            self.broker_host,
+            self.broker_port,
+            self.ca_cert_file,
+            self.cert_file,
+            self.key_file,
+            self.broker_vhost,
+            callback
         )
         rabbitmq_reconnecting_consumer = ReconnectingConsumer(rabbitmq_consumer, self.consumer_routing)
         return rabbitmq_reconnecting_consumer
@@ -95,8 +104,9 @@ class MessageBusManager:
                     rabbit_producer = BasicProducer(
                         self.broker_host,
                         self.broker_port,
-                        self.broker_user,
-                        self.broker_pass,
+                        self.ca_cert_file,
+                        self.cert_file,
+                        self.key_file,
                         self.broker_vhost,
                         settings.get_rabbitmq_producer_routing(queue_suffix),
                         self.encoder,

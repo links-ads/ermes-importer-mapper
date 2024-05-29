@@ -2,6 +2,7 @@ import json
 import logging
 import ssl
 import time
+import os
 from enum import Enum
 from socket import gaierror
 
@@ -63,7 +64,7 @@ class JsonEncoder(Encoder):
 
 class BasicProducer:
 
-    def __init__(self, host, port, user, password, vhost, routing, encoder, use_ssl=True, properties={}):
+    def __init__(self, host, port, ca_cert_file, cert_file, key_file, vhost, routing, encoder, use_ssl=True, properties={}):
         """
         Creates a new RabbitMQ client able to publish messages onto a specific exchange.
         :param host, port, user, password:     amqp broker infos
@@ -71,15 +72,21 @@ class BasicProducer:
         :param encoder: encoder abstraction, providing a serialization method and other info
         :param delivery_mode:   transient or persistent
         """
-        credentials = pika.PlainCredentials(user, password)
-        ssl_options = pika.SSLOptions(ssl.create_default_context(), host)
+        self.host = host
+        self.ca_cert_file = ca_cert_file
+        self.cert_file = cert_file
+        self.key_file = key_file
+        
+        credentials = pika.credentials.ExternalCredentials()
+        ssl_options = self.__get_tls_parameters()
+        
         self._connection_parameters = pika.ConnectionParameters(
-            host=host,
-            port=port,
-            credentials=credentials,
-            virtual_host=vhost,
-            ssl_options=ssl_options if use_ssl else None,
-        )
+                credentials=credentials,
+                host=self.host,
+                port=port,
+                virtual_host=vhost,
+                ssl_options=ssl_options,
+            )
         self._connection = None
         self._channel = None
         self.exchange = routing.get("exchange")
@@ -89,6 +96,19 @@ class BasicProducer:
         self._properties = pika.BasicProperties(
             content_type=self._encoder.content_type, content_encoding=self._encoder.encoding, **properties
         )
+
+
+    def __get_tls_parameters(self):
+        assert os.path.exists(self.ca_cert_file), f"CA certificate file not found: {self.ca_cert_file}"
+        assert os.path.exists(self.cert_file), f"Client certificate file not found: {self.cert_file}"
+        assert os.path.exists(self.key_file), f"Client key file not found: {self.key_file}"
+        context = ssl.create_default_context(cafile=self.ca_cert_file)
+        context.verify_mode = ssl.CERT_REQUIRED
+        context.load_cert_chain(
+            certfile=self.cert_file,
+            keyfile=self.key_file,
+        )
+        return pika.SSLOptions(context, server_hostname=self.host)
 
     def __del__(self):
         self.disconnect()
@@ -204,8 +224,9 @@ class Consumer:
         self,
         host,
         port,
-        user,
-        password,
+        ca_cert_file,
+        cert_file,
+        key_file,
         vhost,
         callback,
         schema=json,
@@ -219,15 +240,22 @@ class Consumer:
         :param fun callback: function to call on message received
         :param int prefetch: number of messages to prefetch
         """
-        credentials = pika.PlainCredentials(user, password)
-        ssl_options = pika.SSLOptions(ssl.create_default_context(), host)
+        self.host = host
+        self.ca_cert_file = ca_cert_file
+        self.cert_file = cert_file
+        self.key_file = key_file
+        
+        credentials = pika.credentials.ExternalCredentials()
+        ssl_options = self.__get_tls_parameters()
+        
         self._connection_parameters = pika.ConnectionParameters(
-            host=host,
-            port=port,
-            virtual_host=vhost,
-            credentials=credentials,
-            ssl_options=ssl_options if use_ssl else None,
-        )
+                credentials=credentials,
+                host=self.host,
+                port=port,
+                virtual_host=vhost,
+                ssl_options=ssl_options,
+            )
+        
         self._callback = callback
         self._schema = schema
         self.should_reconnect = False
@@ -249,6 +277,15 @@ class Consumer:
         self._ack_every = ack_every
         self._received = 0
         self._ready = False
+        
+    def __get_tls_parameters(self):
+        context = ssl.create_default_context(cafile=self.ca_cert_file)
+        context.verify_mode = ssl.CERT_REQUIRED
+        context.load_cert_chain(
+            certfile=self.cert_file,
+            keyfile=self.key_file,
+        )
+        return pika.SSLOptions(context, server_hostname=self.host)
 
     def configure(self, config):
         """Resets the worker instance to the default parameters.

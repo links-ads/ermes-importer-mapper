@@ -10,8 +10,6 @@ from importer.database.schemas import DownloadedDataSchema, MessageSchema
 from importer.driver.datalake_driver import DataLakeDriver
 
 LOG = logging.getLogger(__name__)
-# 'https://datalake-test.shelter-project.cloud/dataset/51a6abe4-8f3c-441a-9efe-f9c62bd47720/resource/9630c901-dc87-42c7-a894-a104aa18c77b/download/58c07c0c-ba67-42c0-bc7c-ca47291c275c5c32002_links_burned_area_delineation_0_20190718t000000_201.tiff'
-# 'https://datalake-test.shelter-project.cloud/dataset/ef0d301f-3b41-446c-91b8-aa686c94f751/resource/de2c5c20-5299-48c0-82ec-5e80eff882d1/download/emsr035_01sisak_delineation_detail01_v2_vector.zip'
 
 
 def mkdir_p(path):

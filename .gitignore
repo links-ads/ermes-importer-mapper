@@ -163,3 +163,5 @@ cython_debug/
 data/
 
 secrets.yml
+
+src/importer/certificates/*
