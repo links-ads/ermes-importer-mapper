@@ -14,20 +14,24 @@ services:
       test: "PGPASSWORD=${DATABASE_PASS} pg_isready -h 127.0.0.1 -U ${DATABASE_USER} -d ${DATABASE_NAME}"
 
   geoserver:
-    image: kartoza/geoserver:2.24.2
+    image: kartoza/geoserver:2.25.0
     restart: unless-stopped
     environment:
       - JAVA_OPTS='-Dorg.geotools.coverage.io.netcdf.enhance.ScaleMissing=true'
-      - GEOSERVER_ADMIN_USER=admintest
-      - GEOSERVER_ADMIN_PASSWORD=geoservertest
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
       - GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR}
       - GEOWEBCACHE_CACHE_DIR=${GEOWEBCACHE_CACHE_DIR}
       - INITIAL_MEMORY=${INITIAL_MEMORY}
       - MAXIMUM_MEMORY=${MAXIMUM_MEMORY}
       - STABLE_EXTENSIONS=netcdf-plugin,wmts-multi-dimensional-plugin,wps-download-plugin
       - COMMUNITY_EXTENSIONS=ncwms-plugin
-      - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_HOST}
       - EXISTING_DATA_DIR=true
+      - GEOSERVER_CSRF_WHITELIST=${GEOSERVER_HOST}
+      - ROOT_WEBAPP_REDIRECT=true
+      - TOMCAT_EXTRAS=false
+      - HTTP_PROXY_NAME=${GEOSERVER_HOST}
+      - HTTP_SCHEME=https
     volumes:
       - gsvdata:${GEOSERVER_DATA_DIR}:rw
     depends_on:
