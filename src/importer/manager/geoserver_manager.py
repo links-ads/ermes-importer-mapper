@@ -21,6 +21,7 @@ class GeoserverManager:
                 pubstatuses = self.driver.publish_from_location(
                     workspace=resource.workspace,
                     layer_name=resource.layer_name,
+                    layer_title=resource.layer_title,
                     storage_location=resource.storage_location,
                     datatype=resource.datatype_id,
                     start_time=resource.start,
@@ -31,6 +32,7 @@ class GeoserverManager:
                     workspace=resource.workspace,
                     store_name=resource.store_name,
                     layer_name=resource.layer_name,
+                    layer_title=resource.layer_title,
                     datatype=resource.datatype_id,
                     start_time=resource.start,
                 )

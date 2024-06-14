@@ -22,6 +22,7 @@ class MessageSchema(BaseModel):
     type: str
     url: Optional[str]
     id: str
+    name: str
     metadata_id: Optional[str]
     request_code: Optional[str]
 
@@ -34,11 +35,13 @@ class DownloadedDataSchema(BaseModel):
     end: datetime
     creation_date: Optional[datetime]
     resource_id: str
+    resource_name: str
     metadata_id: str
     bbox: dict
     tmp_path: str
     request_code: str
     mosaic: bool
+    additional_attributes: Optional[dict]
 
 
 def ewkb_to_wkt(geom: WKBElement):
@@ -57,6 +60,7 @@ class GeoserverResourceSchema(ORMModel):
     workspace: str  # used for all kind of data
     store_name: str  # used for data stored in db
     layer_name: str  # used for all kind of data. It is the table_name of data stored on db
+    layer_title: str  # used for all kind of data. It is the layer title of data stored on db
     storage_location: Optional[str]  # used for data stored in a directory
     expire_on: Optional[datetime]  # used for all kind of data
     start: datetime  # used for all kind of data

@@ -124,4 +124,3 @@ class MessageBusManager:
                 rabbit_producer.disconnect()
         except Exception as e:
             LOG.exception(e)
-            LOG.exception(e)

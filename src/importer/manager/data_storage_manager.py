@@ -198,6 +198,7 @@ class DataStorageManager:
             workspace=data.workspace,
             store_name=data.store_name if data.store_name else f"{data.datatype_id}_{data.resource_id}",
             layer_name=f'{data.datatype_id}_{data.resource_id}{f"_{index}" if index > 0 else ""}',
+            layer_title=data.resource_name,
             storage_location=storage_location,
             expire_on=None,
             start=data.start,

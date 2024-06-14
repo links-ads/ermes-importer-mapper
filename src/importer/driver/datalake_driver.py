@@ -21,6 +21,7 @@ class DataLakeDriver:
         self.access_token_expiration = None
 
     def get_access_token(self, project_name) -> tuple:
+        LOG.info("Getting Data Lake Access Token")
         response = requests.post(
             settings.oauth_login_url(project_name),
             json=settings.oauth_body(project_name),

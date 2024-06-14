@@ -71,7 +71,7 @@ class ProjectSettings(BaseSettings):
 
     def get_service_url(self):
         protocol = "https" if self.use_https else "http"
-        return f"{protocol}://{self.geoserver_host}:{self.geoserver_port}/geoserver"
+        return f"{protocol}://{self.geoserver_host}/geoserver"
 
     def get_rabbitmq_consumer_routing(self):
         return {
@@ -131,7 +131,7 @@ class ProjectSettings(BaseSettings):
 
     def oauth_body(self, project_name: str = None):
         return {
-            "loginId": self.get_oauth_setting(project_name, "oauth_user") or self.oauth_url,
+            "loginId": self.get_oauth_setting(project_name, "oauth_user") or self.oauth_user,
             "password": self.get_oauth_setting(project_name, "oauth_pwd") or self.oauth_pwd,
             "applicationId": self.get_oauth_setting(project_name, "oauth_app_id") or self.oauth_app_id,
             "noJWT": False,

@@ -83,6 +83,7 @@ class DataRetrievalManager:
                 end=message_schema.end_date,
                 creation_date=message_schema.creation_date,
                 resource_id=message_schema.id,
+                resource_name=message_schema.name,
                 metadata_id=message_schema.metadata_id,
                 bbox=message_schema.geometry,
                 request_code=message_schema.request_code,

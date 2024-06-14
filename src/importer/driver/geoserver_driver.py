@@ -54,7 +54,7 @@ class GeoserverDriver:
             if result:
                 LOG.error(result)
 
-    def publish_table(self, workspace: str, store_name: str, layer_name: str, datatype: str, start_time: datetime):
+    def publish_table(self, workspace: str, store_name: str, layer_name: str, layer_title: str, datatype: str, start_time: datetime):
         """
         Publishes a layer from a table in the geoserver.
 
@@ -77,7 +77,7 @@ class GeoserverDriver:
             # if datatype has time dimension, update the featuretype with time dim
             if self.dsm.has_time_dimension(workspace, datatype):
                 time_attribute = self.dsm.get_time_attribute(workspace, datatype)
-                err_status = self.geoserver.publish_vector_time_dimensions(workspace, layer_name, time_attribute)
+                err_status = self.geoserver.publish_vector_time_dimensions(workspace, layer_name, layer_title, time_attribute)
                 ts = self.dsm.get_timestamps_from_vector(layer_name, time_attribute)
                 if ts:
                     timestamps = ts
@@ -108,17 +108,17 @@ class GeoserverDriver:
                 LOG.error(e)
 
     def publish_from_db(
-        self, workspace: str, store_name: str, layer_name: str, datatype: str, start_time: datetime
+        self, workspace: str, store_name: str, layer_name: str, layer_title: str, datatype: str, start_time: datetime
     ) -> List[LayerPublicationStatus]:
         self.create_workspace(workspace)
         self.create_store(store_name, workspace)
-        res = self.publish_table(workspace, store_name, layer_name, datatype, start_time)
+        res = self.publish_table(workspace, store_name, layer_name, layer_title, datatype, start_time)
         if res.success:
             self.style_layer(workspace, res.layer_name, res.datatype)
         return [res]
 
     def publish_from_location(
-        self, workspace: str, layer_name: str, storage_location: str, datatype: str, start_time: datetime, mosaic: bool
+        self, workspace: str, layer_name: str, layer_title: str, storage_location: str, datatype: str, start_time: datetime, mosaic: bool
     ) -> List[LayerPublicationStatus]:
         self.create_workspace(workspace)
         params = self.dsm.get_parameters(workspace, datatype)
@@ -129,6 +129,7 @@ class GeoserverDriver:
             datatype=datatype,
             start_time=start_time,
             coveragestore_name=layer_name,
+            coveragestore_title=layer_title,
             workspace=workspace,
             external=True,
             netcdf_dt_rewrite=netcdf_dt_rewrite,
