@@ -61,18 +61,18 @@ config:	check-target		## Build the compose project.
 .PHONY: build
 build:	check-target		## Build the compose project.
 	@echo "Building images with target: $${TARGET}"
-	@$(DOCKER_COMPOSE) build $${ARGS}
+	@$(DOCKER_COMPOSE) -p gaia-im-$${TARGET} build $${ARGS}
 
 .PHONY: up
 up: check-target			## Start the project containers.
 	@echo "Starting containers with target: $${TARGET}"
-	@$(DOCKER_COMPOSE) up $${ARGS}
+	@$(DOCKER_COMPOSE) -p gaia-im-$${TARGET} up $${ARGS}
 
 stop: check-target			## Stop the project containers.
 	@echo "Stopping containers with target: $${TARGET}"
-	@$(DOCKER_COMPOSE) stop $${ARGS}
+	@$(DOCKER_COMPOSE) -p gaia-im-$${TARGET} stop $${ARGS}
 
 .PHONY: down
 down: check-target			## Stop the project eliminating containers, use ARGS="-v" to remove volumes.
 	@echo "Stopping containers with target: $${TARGET}"
-	@$(DOCKER_COMPOSE) down $${ARGS}
+	@$(DOCKER_COMPOSE) -p gaia-im-$${TARGET} down $${ARGS}

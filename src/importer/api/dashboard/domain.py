@@ -1,17 +1,20 @@
 import logging
-from sqlalchemy.sql.sqltypes import DateTime
-from importer.database.models import GeoserverResource
 from typing import List, Optional
-from sqlalchemy.orm import Session
+
 import shapely.geometry
-from shapely.geometry.multipolygon import MultiPolygon
 from geoalchemy2 import WKTElement
+from shapely.geometry.multipolygon import MultiPolygon
+from sqlalchemy.orm import Session
+from sqlalchemy.sql.sqltypes import DateTime
+
+from importer.database.models import GeoserverResource
 
 LOG = logging.getLogger(__name__)
 
 
 def get_resources(
     session: Session,
+    workspace: str,
     datatype_ids: Optional[List[str]] = None,
     resource_id: Optional[str] = None,
     layer_name: Optional[str] = None,
@@ -26,6 +29,7 @@ def get_resources(
 ) -> List[GeoserverResource]:
 
     statement = session.query(GeoserverResource)
+    statement = statement.filter(GeoserverResource.workspace == workspace)
 
     if not include_deleted:
         statement = statement.filter(GeoserverResource.deleted_at.is_(None))

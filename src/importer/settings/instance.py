@@ -1,11 +1,13 @@
 import os
 
+import yaml
 from pydantic import BaseSettings
 
 from importer.version import __version__
 
 
 class ProjectSettings(BaseSettings):
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
@@ -26,6 +28,9 @@ class ProjectSettings(BaseSettings):
     rabbitmq_port: str
     rabbitmq_user: str
     rabbitmq_pass: str
+    rabbitmq_ca_cert_file: str
+    rabbitmq_cert_file: str
+    rabbitmq_key_file: str
     rabbitmq_vhost: str
 
     rabbitmq_exchange: str
@@ -40,6 +45,7 @@ class ProjectSettings(BaseSettings):
     oauth_app_id: str
     oauth_user: str
     oauth_pwd: str
+    oauth2_settings: dict = None
 
     # Database settings
     database_host: str
@@ -52,6 +58,9 @@ class ProjectSettings(BaseSettings):
     geoserver_admin_user: str
     geoserver_admin_password: str
     geoserver_data_dir: str
+    use_https: bool = False
+    geoserver_host: str
+    geoserver_port: str
     geoserver_workspace: str = "general"
     geoserver_tif_folder: str = "geotiff"
     geoserver_imagemosaic_folder: str = "imagemosaic"
@@ -59,6 +68,10 @@ class ProjectSettings(BaseSettings):
     @property
     def app_version(self):
         return __version__
+
+    def get_service_url(self):
+        protocol = "https" if self.use_https else "http"
+        return f"{protocol}://{self.geoserver_host}/geoserver"
 
     def get_rabbitmq_consumer_routing(self):
         return {
@@ -80,20 +93,53 @@ class ProjectSettings(BaseSettings):
             f"{self.database_host}:{self.database_port}/{self.database_name}"
         )
 
-    def oauth_login_url(self):
-        return f"{self.oauth_url}/api/login"
+    @staticmethod
+    def safe_access(dictionary, keys, default=None):
+        """
+        Safely access nested items in a dictionary.
 
-    def oauth_body(self):
+        Args:
+            dictionary (dict): The dictionary to access.
+            keys (list): List of keys to access the nested item.
+            default: Default value to return if any key is missing. Defaults to None.
+
+        Returns:
+            The value at the nested keys if they exist, otherwise the default value.
+        """
+        try:
+            for key in keys:
+                dictionary = dictionary[key]
+            return dictionary
+        except (KeyError, TypeError):
+            return default
+
+    def get_oauth_setting(self, project_name, setting):
+        if not self.oauth2_settings:
+            yaml_file = "/src/importer/secrets.yml"
+            if os.path.isfile(yaml_file):
+                with open(yaml_file) as f:
+                    data = yaml.safe_load(f)
+                    self.oauth2_settings = data.get("projects")
+        try:
+            return self.oauth2_settings.get(project_name).get(setting)
+        except (TypeError, KeyError, AttributeError):
+            return None
+
+    def oauth_login_url(self, project_name: str = None):
+        oauth_url = self.get_oauth_setting(project_name, "oauth_url") or self.oauth_url
+        return f"{oauth_url}/api/login"
+
+    def oauth_body(self, project_name: str = None):
         return {
-            "loginId": self.oauth_user,
-            "password": self.oauth_pwd,
-            "applicationId": self.oauth_app_id,
+            "loginId": self.get_oauth_setting(project_name, "oauth_user") or self.oauth_user,
+            "password": self.get_oauth_setting(project_name, "oauth_pwd") or self.oauth_pwd,
+            "applicationId": self.get_oauth_setting(project_name, "oauth_app_id") or self.oauth_app_id,
             "noJWT": False,
         }
 
-    def oauth_headers(self):
+    def oauth_headers(self, project_name: str = None):
         return {
-            "Authorization": self.oauth_api_key,
+            "Authorization": self.get_oauth_setting(project_name, "oauth_app_key") or self.oauth_api_key,
         }
 
     def data_lake_resource_show_url(self):
@@ -115,8 +161,10 @@ class ProjectSettings(BaseSettings):
         }
 
     def get_temp_folder(self):
-        return os.path.join(self.geoserver_data_dir, "temp")
+        temp_folder = os.path.join(self.geoserver_data_dir, "temp")
+        if not os.path.exists(temp_folder):
+            os.makedirs(temp_folder)
+        return temp_folder
 
 
-settings = ProjectSettings()
 settings = ProjectSettings()

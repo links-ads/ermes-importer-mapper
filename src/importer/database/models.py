@@ -1,15 +1,16 @@
 from datetime import datetime
 
 from geoalchemy2 import Geometry
-from importer.database import APIModel, TimezoneDateTime
 from sqlalchemy import Boolean, Column, Integer, String, Text
+
+from importer.database import APIModel, TimezoneDateTime
 
 
 class GeoserverResource(APIModel):
     __tablename__ = "geoserver_resource"
     id = Column(Integer, primary_key=True)
     datatype_id = Column(String(64), nullable=False)
-    workspace_name = Column(String(64), nullable=False)
+    workspace = Column(String(64), nullable=False)
     store_name = Column(String(64), nullable=False)  # "postgis_db" or layer_name
     layer_name = Column(String(128), nullable=False)
     storage_location = Column(String(256), nullable=True)
@@ -29,6 +30,7 @@ class GeoserverResource(APIModel):
 class LayerSettings(APIModel):
     __tablename__ = "layer_settings"
     id = Column(Integer, primary_key=True)
+    project = Column(String(64), nullable=False)
     master_datatype_id = Column(String(64), nullable=True, server_default=None)
     datatype_id = Column(String(64), nullable=False)
     var_name = Column(String(64), nullable=True, server_default=None)

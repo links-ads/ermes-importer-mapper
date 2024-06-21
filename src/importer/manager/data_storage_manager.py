@@ -11,6 +11,16 @@ import geopandas as gpd
 import rasterio.features
 import tifffile
 from geoalchemy2.shape import from_shape
+from rasterio.transform import from_origin
+from shapely.geometry import shape
+from shapely.geometry.multipolygon import MultiPolygon
+from shapely.geometry.polygon import Polygon
+from sqlalchemy import func
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.session import Session
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import DateTime
+
 from importer.database.extensions import db_session
 from importer.database.models import GeoserverResource, LayerSettings
 from importer.database.schemas import (
@@ -23,15 +33,6 @@ from importer.driver.postgis_driver import PostGISDriver
 from importer.dto.layer_publication_status import LayerPublicationStatus
 from importer.settings.instance import settings
 from importer.util.datetimeutils import isoformat_Z
-from rasterio.transform import from_origin
-from shapely.geometry import shape
-from shapely.geometry.multipolygon import MultiPolygon
-from shapely.geometry.polygon import Polygon
-from sqlalchemy import func
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.orm.session import Session
-from sqlalchemy.sql.schema import Column
-from sqlalchemy.sql.sqltypes import DateTime
 
 LOG = logging.getLogger(__name__)
 
@@ -41,7 +42,6 @@ class DataStorageManager:
         self.driver = PostGISDriver()
         self.geoserver_file_storage_dir = settings.geoserver_data_dir
         self.geoserver_tif_folder = settings.geoserver_tif_folder
-        self.geoserver_workspace = settings.geoserver_workspace
         self.geoserver_imagemosaic_folder = settings.geoserver_imagemosaic_folder
 
     def save_resources(
@@ -73,7 +73,7 @@ class DataStorageManager:
             except Exception:
                 try:
                     # If table already exists, overwrite it
-                    self.driver.drop_table(table_name=saved_resource.layer_name)
+                    # self.driver.drop_table(table_name=saved_resource.layer_name)
                     self.driver.save_table(gpd_df, table_name=saved_resource.layer_name)
                 except Exception as e:
                     LOG.error(f"Failed to save geopandas dataframe in table {saved_resource.layer_name}: {str(e)}")
@@ -95,7 +95,7 @@ class DataStorageManager:
             for index, filename in enumerate(glob.glob(os.path.join(data.tmp_path, f"**/*.{ext}"), recursive=True)):
                 try:
                     gdf = gpd.read_file(filename)
-                    gpd_dfs.append(gdf.applymap(lambda x: self.dumps_json(x)))
+                    gpd_dfs.append(gdf.map(lambda x: self.dumps_json(x)))
                     saved_resource = self.pack_resource(data, index)
                     saved_resources.append(saved_resource)
                 except Exception as e:
@@ -195,9 +195,10 @@ class DataStorageManager:
         bbox = from_shape(geometry, srid=4326)
         packed_resource = GeoserverResourceSchema(
             datatype_id=data.datatype_id,
-            workspace_name=self.geoserver_workspace,
+            workspace=data.workspace,
             store_name=data.store_name if data.store_name else f"{data.datatype_id}_{data.resource_id}",
             layer_name=f'{data.datatype_id}_{data.resource_id}{f"_{index}" if index > 0 else ""}',
+            layer_title=data.resource_name,
             storage_location=storage_location,
             expire_on=None,
             start=data.start,
@@ -228,7 +229,7 @@ class DataStorageManager:
                 with db_session() as session:
                     saved_resource = GeoserverResource(
                         datatype_id=pubstatus.datatype,
-                        workspace_name=self.geoserver_workspace,
+                        workspace=resource.workspace,
                         store_name=resource.store_name,
                         layer_name=pubstatus.layer_name,
                         storage_location=resource.storage_location,
@@ -253,6 +254,7 @@ class DataStorageManager:
     def get_resources(
         self,
         session: Session,
+        workspace: str,
         datatype_ids: Optional[List[str]] = None,
         resource_id: Optional[str] = None,
         expire_on: Optional[DateTime] = None,
@@ -260,6 +262,7 @@ class DataStorageManager:
         created_before: Optional[DateTime] = None,
     ) -> List[GeoserverResource]:
         statement = session.query(GeoserverResource).filter(GeoserverResource.deleted_at.is_(None))
+        statement = statement.filter(GeoserverResource.workspace == workspace)
         if datatype_ids:
             statement = statement.filter(GeoserverResource.datatype_id.in_(datatype_ids))
         if resource_id:
@@ -277,6 +280,7 @@ class DataStorageManager:
     def get_layer_settings(
         self,
         session,
+        project: str,
         master_datatype_id: str = None,
         datatype_id: str = None,
         var_name: str = None,
@@ -306,6 +310,7 @@ class DataStorageManager:
         """
 
         statement = session.query(LayerSettings)
+        statement = statement.filter(LayerSettings.project == project)
         if master_datatype_id:
             statement = statement.filter(LayerSettings.master_datatype_id == master_datatype_id)
         if datatype_id:
@@ -331,9 +336,9 @@ class DataStorageManager:
         LOG.debug(result)
         return result
 
-    def get_layer_style(self, datatype_id: str = None) -> str:
+    def get_layer_style(self, workspace: str, datatype_id: str = None) -> str:
         with db_session() as session:
-            result = self.get_layer_settings(session, datatype_id=datatype_id)
+            result = self.get_layer_settings(session, project=workspace, datatype_id=datatype_id)
             try:
                 style = result.style
             except AttributeError:
@@ -342,9 +347,9 @@ class DataStorageManager:
 
         return style
 
-    def has_time_dimension(self, datatype_id: str = None) -> str:
+    def has_time_dimension(self, workspace: str, datatype_id: str = None) -> str:
         with db_session() as session:
-            result = self.get_layer_settings(session, datatype_id=datatype_id)
+            result = self.get_layer_settings(session, project=workspace, datatype_id=datatype_id)
             try:
                 time_dim = result.time_dimension
                 LOG.info(f"time dimension for datatype id {datatype_id}: {time_dim}")
@@ -354,10 +359,10 @@ class DataStorageManager:
 
         return time_dim
 
-    def get_netcdf_layers(self, master_datatype_id):
+    def get_netcdf_layers(self, workspace: str, master_datatype_id):
         layers = []
         with db_session() as session:
-            result = self.get_layer_settings(session, master_datatype_id=master_datatype_id)
+            result = self.get_layer_settings(session, project=workspace, master_datatype_id=master_datatype_id)
             try:
                 # create list of value couple (datatype_id, var_name) if datatype_id is not None
                 for r in result:
@@ -372,10 +377,10 @@ class DataStorageManager:
             layers = None
         return layers
 
-    def get_parameters(self, datatype_id: str = None) -> str:
+    def get_parameters(self, workspace: str, datatype_id: str = None) -> str:
         par = None
         with db_session() as session:
-            result = self.get_layer_settings(session, datatype_id=datatype_id)
+            result = self.get_layer_settings(session, project=workspace, datatype_id=datatype_id)
             try:
                 par = json.loads(result.parameters)
                 LOG.info(f"parameters for datatype id {datatype_id}: {par}")
@@ -388,9 +393,9 @@ class DataStorageManager:
 
         return par
 
-    def get_time_attribute(self, datatype_id: str = None) -> str:
+    def get_time_attribute(self, workspace: str, datatype_id: str = None) -> str:
         with db_session() as session:
-            result = self.get_layer_settings(session, datatype_id=datatype_id)
+            result = self.get_layer_settings(session, project=workspace, datatype_id=datatype_id)
             try:
                 time_attribute = result.time_attribute
             except AttributeError:
@@ -442,7 +447,7 @@ class DataStorageManager:
 
                 if resource.storage_location is None:
                     LOG.info(f"Dropping table {resource.layer_name} from db")
-                    self.driver.drop_table(table_name=resource.layer_name)
+                    # self.driver.drop_table(table_name=resource.layer_name)
                 elif rlc_copy[resource.resource_id] == 1:
                     if os.path.isfile(resource.storage_location):
                         LOG.info(f"Deleting file {resource.storage_location}")

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ermes-importer-mapper"
 authors = [{ name = "Federico Oldani", email = "federico.oldani@linksfoundation.com" }]
-description = "Importer and Mapper for ERMES framework"
+description = "Importer and Mapper for GAIA framework"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.7"

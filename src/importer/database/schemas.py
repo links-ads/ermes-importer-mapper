@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, validator
-from geoalchemy2.shape import to_shape
+
 from geoalchemy2.elements import WKBElement
+from geoalchemy2.shape import to_shape
+from pydantic import BaseModel, validator
 
 
 class ORMModel(BaseModel):
@@ -21,22 +22,26 @@ class MessageSchema(BaseModel):
     type: str
     url: Optional[str]
     id: str
+    name: str
     metadata_id: Optional[str]
     request_code: Optional[str]
 
 
 class DownloadedDataSchema(BaseModel):
+    workspace: str
     datatype_id: str
     store_name: Optional[str]
     start: datetime
     end: datetime
     creation_date: Optional[datetime]
     resource_id: str
+    resource_name: str
     metadata_id: str
     bbox: dict
     tmp_path: str
     request_code: str
     mosaic: bool
+    additional_attributes: Optional[dict]
 
 
 def ewkb_to_wkt(geom: WKBElement):
@@ -52,9 +57,10 @@ def ewkb_to_wkt(geom: WKBElement):
 
 class GeoserverResourceSchema(ORMModel):
     datatype_id: str  # used for all kind of data
-    workspace_name: str  # used for all kind of data
+    workspace: str  # used for all kind of data
     store_name: str  # used for data stored in db
     layer_name: str  # used for all kind of data. It is the table_name of data stored on db
+    layer_title: str  # used for all kind of data. It is the layer title of data stored on db
     storage_location: Optional[str]  # used for data stored in a directory
     expire_on: Optional[datetime]  # used for all kind of data
     start: datetime  # used for all kind of data
@@ -76,6 +82,7 @@ class GeoserverResourceSchema(ORMModel):
 
 
 class LayerSettingsSchema(ORMModel):
+    project: str
     master_datatype_id: str  # used for all kind of data
     datatype_id: str  # used for all kind of data
     var_name: str  # used for all kind of data

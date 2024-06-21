@@ -18,7 +18,7 @@ router = APIRouter()
 
 @router.get("/resource_path", status_code=200, dependencies=[Security(api_key_auth)])
 def get_resource_path(
-    layer_name: str = Query(None), resource_id: str = Query(None), db: Session = Depends(db_webserver)
+    workspace: str, layer_name: str = Query(None), resource_id: str = Query(None), db: Session = Depends(db_webserver)
 ):
     """Return the temporary filename containing the resource
 
@@ -33,14 +33,14 @@ def get_resource_path(
     """
     assert layer_name or resource_id, HTTPException(status_code=422, detail="Specify at least one parameter")
 
-    resources = domain.get_resources(db, resource_id=resource_id, layer_name=layer_name)
+    resources = domain.get_resources(db, workspace=workspace, resource_id=resource_id, layer_name=layer_name)
     if len(resources) == 0:
         raise HTTPException(status_code=404, detail="Resource not found")
 
     resource = resources[0]
     filepath_origin = resource.storage_location
     if not filepath_origin:
-        temp_filename = domain.get_resource_from_dl(resource.resource_id)
+        temp_filename = domain.get_resource_from_dl(resource.workspace, resource.resource_id)
     else:
         temp_filename = domain.prepare_resource(filepath_origin)
 
@@ -90,5 +90,4 @@ def download_resource(filename: str):
         )
     headers = {}
     headers["Content-Disposition"] = f"attachment; filename={filename}"
-    return FileResponse(filepath, headers=headers, background=BackgroundTask(cleanup))
     return FileResponse(filepath, headers=headers, background=BackgroundTask(cleanup))

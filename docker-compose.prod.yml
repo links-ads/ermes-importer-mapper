@@ -1,6 +1,10 @@
-version: "3"
+volumes:
+  psgdata:
+  gsvdata:
+  
 
 services:
+
   database:
     ports:
       - "127.0.0.1:${DB_PORT_EXPOSE}:5432"

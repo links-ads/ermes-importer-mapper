@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from functools import reduce
 from typing import List, Optional
-
+import pathlib
 import numpy
 import requests
 import xarray
@@ -26,13 +26,13 @@ class GeoserverREST(Geoserver):
     def session(self):
         return self._session
 
-    def __featuretype_withtime(self, workspace: str, featuretype: str, time_attribute: str):
+    def __featuretype_withtime(self, workspace: str, featuretype: str, title:str, time_attribute: str):
         url = f"{self.service_url}/rest/workspaces/{workspace}/featuretypes/{featuretype}.json"
         data = {
             "featureType": {
                 "name": featuretype,
                 "nativeName": featuretype,
-                "title": featuretype,
+                "title": title if title else featuretype,
                 "enabled": True,
                 "metadata": {
                     "entry": [
@@ -55,7 +55,7 @@ class GeoserverREST(Geoserver):
         return url, data
 
     def __packcoverageview(
-        self, workspace: str, coveragestore_name: str, bands: List[str], datatypeid: str, withtime=False
+        self, workspace: str, coveragestore_name: str, layer_name: str, bands: List[str], datatypeid: str, withtime=False
     ):
         url = f"{self.service_url}/rest/workspaces/{workspace}/coveragestores/{coveragestore_name}/coverages"
         nativedatatype = reduce(lambda a, b: a + b, bands)
@@ -63,7 +63,7 @@ class GeoserverREST(Geoserver):
         data = {
             "coverage": {
                 "name": coveragename,
-                "title": coveragename,
+                "title": layer_name if layer_name else coveragename,
                 "nativeName": coveragestore_name,
                 "metadata": {
                     "entry": [
@@ -145,14 +145,15 @@ class GeoserverREST(Geoserver):
         return url, data
 
     def __packcoverage(
-        self, workspace: str, coveragestore_name: str, nativename: str, datatypeid: str, withtime=False
+        self, workspace: str, coveragestore_name: str, coveragestore_title: str, nativename: str, datatypeid: str, withtime=False
     ):
         url = f"{self.service_url}/rest/workspaces/{workspace}/coveragestores/{coveragestore_name}/coverages"
         coveragename = f"{datatypeid}_{nativename}_{coveragestore_name}"
+        title = f"{nativename} {coveragestore_title}"
         data = {
             "coverage": {
                 "name": coveragename,
-                "title": coveragename,
+                "title": title,
                 "nativeCoverageName": nativename,
                 "dimensions": {
                     "coverageDimension": {
@@ -186,6 +187,7 @@ class GeoserverREST(Geoserver):
         store_type: str,
         workspace: str,
         coveragestore_name: str,
+        coveragestore_title: str,
         datatype: str,
         netcdf_dt_rewrite: list,
     ):
@@ -229,6 +231,7 @@ class GeoserverREST(Geoserver):
                 url, data, coveragename = self.__packcoverageview(
                     workspace,
                     coveragestore_name,
+                    coveragestore_title,
                     pairmap["native"],
                     pairmap["rename"],
                     withtime=pairmap["time_dimension"],
@@ -237,6 +240,7 @@ class GeoserverREST(Geoserver):
                 url, data, coveragename = self.__packcoverage(
                     workspace,
                     coveragestore_name,
+                    coveragestore_title,
                     pairmap["native"],
                     pairmap["rename"],
                     withtime=pairmap["time_dimension"],
@@ -277,6 +281,7 @@ class GeoserverREST(Geoserver):
         store_type: str,
         workspace: str,
         coveragestore_name: str,
+        coveragestore_title: str,
         datatype: str,
         content_type: str,
         configure: str,
@@ -288,13 +293,14 @@ class GeoserverREST(Geoserver):
             f"{coveragestore_name}/{store_type}.{file_type}"
         )
         headers = {"Content-type": content_type, "Accept": "application/xml"}
-        params = {"configure": configure}
-        if configure != "all":
-            params["coverageName"] = coveragestore_name
-
+        params = {"configure": 'none'}
+        # if configure != "all":
+        #     params["coverageName"] = coveragestore_name
+        LOG.info(f"url: {url}, headers: {headers}, params: {params}, data: {path}")
         try:
             r = self.session.put(url, data=path, headers=headers, params=params)
             if r.status_code == 201:
+                self.__create_layer_from_store(workspace, path, coveragestore_name, coveragestore_title)
                 err_string = None
             else:
                 err_string = f"{r.status_code}: The coveragestore can not be created! {r.text}"
@@ -311,6 +317,25 @@ class GeoserverREST(Geoserver):
                 timestamps=([] if err_string else [isoformat_Z(set_utc_default_tz(start_time))]),
             )
         ]
+    
+    def __create_layer_from_store(self, workspace: str, path: str, coveragestore_name: str, coveragestore_title: str):
+        url = f"{self.service_url}/rest/workspaces/{workspace}/coveragestores/{coveragestore_name}/coverages"
+        body = {
+            "coverage": {
+                "nativeName": coveragestore_name,
+                "title": coveragestore_title,
+                "nativeCoverageName": pathlib.Path(path).stem
+            }
+        }
+        headers = {"Content-type": "application/json"}
+
+        LOG.info(f"url: {url}, body: {body}")
+        try:
+            r = self.session.post(url, headers=headers, data=json.dumps(body))
+            if r.status_code != 201:
+                raise Exception(f"{r.status_code}: {r.text}")
+        except Exception as e:
+            raise Exception(f"Error: {e}")
 
     def __create_coveragestore_mosaic(
         self, path: str, workspace: str, coveragestore_name: str, datatype: str, start_time: datetime
@@ -385,6 +410,7 @@ class GeoserverREST(Geoserver):
         start_time: datetime,
         workspace: Optional[str] = None,
         coveragestore_name: Optional[str] = None,
+        coveragestore_title: Optional[str] = None,
         netcdf_dt_rewrite: Optional[list] = None,
         external: bool = False,
         mosaic: bool = False,
@@ -427,14 +453,14 @@ class GeoserverREST(Geoserver):
             self.__apply_params(workspace, coveragestore_name, params)
         elif file_type == "netcdf":  # and netcdf_dt_rewrite is not None:
             layer_list = self.__create_coveragestore_netcdf_dt_rewrite(
-                path, store_type, workspace, coveragestore_name, datatype, netcdf_dt_rewrite
+                path, store_type, workspace, coveragestore_name, coveragestore_title, datatype, netcdf_dt_rewrite
             )
         # elif file_type == 'netcdf':
         #    return self.__create_coveragestore_common(path, store_type, workspace, coveragestore_name, datatype,
         #       content_type, 'all', 'netcdf')
         elif file_type == "geotiff":
             layer_list = self.__create_coveragestore_common(
-                path, store_type, workspace, coveragestore_name, datatype, content_type, "first", "geotiff", start_time
+                path, store_type, workspace, coveragestore_name, coveragestore_title, datatype, content_type, "first", "geotiff", start_time
             )
             self.__apply_params(workspace, coveragestore_name, params)
         else:
@@ -446,14 +472,14 @@ class GeoserverREST(Geoserver):
 
         return layer_list
 
-    def publish_vector_time_dimensions(self, workspace: str, featuretype: str, time_attribute: str):
+    def publish_vector_time_dimensions(self, workspace: str, featuretype: str, title: str, time_attribute: str):
         LOG.info(f"time attribute: {time_attribute}")
         status = None
         if not time_attribute:
             status = f"TIME_ATTRIBUTE not specified for layer {featuretype} not specified!"
             LOG.error(f"time attribute: {time_attribute}")
         else:
-            url, data = self.__featuretype_withtime(workspace, featuretype, time_attribute)
+            url, data = self.__featuretype_withtime(workspace, featuretype, title, time_attribute)
             try:
                 r = self.session.put(url, json=data)
                 if r.status_code / 100 == 2:

@@ -18,7 +18,7 @@ class PostGISDriver:
         self.SessionLocal = scoped_session(session_factory)
 
     def save_table(self, gpd_df: gpd.GeoDataFrame, table_name: str):
-        gpd_df.to_postgis(table_name, self.engine, index=True, index_label="Index")
+        gpd_df.to_postgis(table_name, self.engine, if_exists="replace", index=True, index_label="Index")
 
     def get_table(self, table_name: str, geom_col: str = "geometry"):
         sql_script = f'SELECT * FROM "{table_name}"'
@@ -74,5 +74,4 @@ class PostGISDriver:
             LOG.warning(e)
 
     def execute(self, sql_script: str):
-        sql.execute(sql_script, self.engine)
         sql.execute(sql_script, self.engine)
