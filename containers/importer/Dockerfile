@@ -9,9 +9,6 @@ WORKDIR /$PROJECT_NAME
 # copy and install requirements
 COPY requirements/ requirements/
 
-ENV http_proxy $HTTPS_PROXY
-ENV https_proxy $HTTPS_PROXY
-
 RUN apt-get update -y
 RUN apt-get install python3-pip software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa
