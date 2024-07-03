@@ -11,15 +11,15 @@ services:
 
   database:
     ports:
-      - "${DB_PORT_EXPOSE}:5432"
+      - "127.0.0.1:${DB_PORT_EXPOSE}:5432"
   
   geoserver:
     ports:
-      - "${GEOSERVER_PORT}:8080"
+      - "127.0.0.1:${GEOSERVER_PORT}:8080"
   
   webserver:
     ports:
-      - "${WS_PORT}:7500"
+      - "127.0.0.1:${WS_PORT}:7500"
     logging:
       options:
         labels: "debug"

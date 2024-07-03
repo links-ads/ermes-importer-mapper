@@ -338,7 +338,7 @@ class GeoserverREST(Geoserver):
             raise Exception(f"Error: {e}")
 
     def __create_coveragestore_mosaic(
-        self, path: str, workspace: str, coveragestore_name: str, datatype: str, start_time: datetime
+        self, path: str, workspace: str, coveragestore_name: str, coveragestore_title: str, datatype: str, start_time: datetime
     ):
         publication_statuses = []
         timestamps = [isoformat_Z(set_utc_default_tz(start_time))]
@@ -379,7 +379,7 @@ class GeoserverREST(Geoserver):
 
         url = f"{self.service_url}/rest/workspaces/{workspace}/coveragestores/{coveragestore_name}/coverages"
         coveragename = f"{coveragestore_name}"
-        data = {"coverage": {"name": coveragename, "title": coveragename, "nativeFormat": "ImageMosaic"}}
+        data = {"coverage": {"name": coveragename, "title": coveragestore_title, "nativeFormat": "ImageMosaic"}}
 
         try:
             r = self.session.post(url, json=data)
@@ -449,7 +449,7 @@ class GeoserverREST(Geoserver):
         file_type = "netcdf" if path.split(".")[-1] in ["nc", "ncml"] else "geotiff"
 
         if mosaic:
-            layer_list = self.__create_coveragestore_mosaic(path, workspace, coveragestore_name, datatype, start_time)
+            layer_list = self.__create_coveragestore_mosaic(path, workspace, coveragestore_name, coveragestore_title, datatype, start_time)
             self.__apply_params(workspace, coveragestore_name, params)
         elif file_type == "netcdf":  # and netcdf_dt_rewrite is not None:
             layer_list = self.__create_coveragestore_netcdf_dt_rewrite(
