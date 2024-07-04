@@ -1,8 +1,8 @@
-alembic==1.6.5
+alembic==1.13.2
 fastapi==0.111.0
-GeoAlchemy2==0.8.5
+GeoAlchemy2==0.15.1
 geopandas==0.14.4
-geoserver-rest==2.0.0
+geoserver-rest==2.7.0
 imagecodecs==2022.8.8
 numpy==1.26.4
 pika==1.2.0
@@ -11,7 +11,7 @@ pydantic==1.8.2
 python-dotenv==0.17.1
 PyYAML==6.0.1
 rasterio==1.3a3
-SQLAlchemy==1.4.41
+SQLAlchemy==2.0.31
 tifffile==2021.4.8
 uvicorn==0.30.0
 netCDF4==1.6.1
