@@ -38,7 +38,8 @@ class GeoserverDriver:
                 LOG.info(result)
 
     def create_store(self, store_name: str, workspace: str):
-        existing_datastore = self.geoserver.get_datastores()
+        existing_datastore = self.geoserver.get_datastores(workspace=workspace)
+        LOG.info(f'existing_datastore: {existing_datastore}')
         if existing_datastore["dataStores"] == "" or (
             store_name not in [dsitem["name"] for dsitem in existing_datastore["dataStores"]["dataStore"]]
         ):
