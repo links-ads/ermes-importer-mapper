@@ -107,6 +107,7 @@ class Notify:
             "start_date": pkg_dict.get('file_date_start', 'None'),
             "end_date": pkg_dict.get('file_date_end', 'None'),
             "geometry": geometry,
+            "destinatary_organization": pkg_dict.get('organization', 'None'),
             "request_code": req_code,
             "url": url
             }

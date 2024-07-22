@@ -22,6 +22,7 @@ class GeoserverResource(APIModel):
     resource_id = Column(String(128), nullable=False)
     metadata_id = Column(String(128), nullable=True)
     bbox = Column(Geometry(srid=4326, geometry_type="MULTIPOLYGON"), nullable=False)
+    dest_org = Column(String(64), nullable=True)
     request_code = Column(String(128), nullable=True)
     timestamps = Column(Text, nullable=False)
     mosaic = Column(Boolean, server_default="0")

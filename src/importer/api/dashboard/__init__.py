@@ -80,6 +80,7 @@ def get_layers(
     bbox: Optional[str] = Query(None),
     start: Optional[datetime] = Query(None),
     end: Optional[datetime] = Query(None),
+    destinatary_organizations: Optional[List[str]] = Query(None),
     request_codes: Optional[List[str]] = Query(None),
     include_map_requests: Optional[bool] = Query(True),
     db: Session = Depends(db_webserver),
@@ -96,6 +97,8 @@ def get_layers(
     :type start: Optional[datetime], optional
     :param end: filter resources with end_date <= end, end in the form 'YYYY-MM-DD HH:MM:SS', defaults to Query(None)
     :type end: Optional[datetime], optional
+    :param dest_organization: filter resources with destinatary_organization specified
+    :type dest_organization: Optional[str], optional
     :type request_codes: Optional[List[str]], optional
     :param db: DB session instance, defaults to Depends(db_webserver)
     :type db: Session, optional
@@ -109,6 +112,7 @@ def get_layers(
         bbox=bbox,
         start=start,
         end=end,
+        destinatary_organizations=destinatary_organizations,
         request_codes=request_codes,
         exclude_valued_request_code=(not include_map_requests),
         order_by=GeoserverResource.created_at,
@@ -127,6 +131,7 @@ def get_layers(
                         "name": f"{resource.workspace}:{resource.layer_name}",
                         "timestamps": __get_filtered_ts(resource.timestamps, start, end),
                         "created_at": resource.created_at.isoformat(timespec="seconds"),
+                        "destinatary_organization": resource.dest_org,
                         "request_code": resource.request_code,
                         "metadata_id": resource.metadata_id,
                     }

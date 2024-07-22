@@ -206,6 +206,7 @@ class DataStorageManager:
             creation_date=data.creation_date,
             resource_id=data.resource_id,
             metadata_id=data.metadata_id,
+            dest_org=data.destinatary_organization,
             request_code=data.request_code,
             bbox=bbox,
             mosaic=data.mosaic,
@@ -239,6 +240,7 @@ class DataStorageManager:
                         created_at=resource.creation_date,
                         resource_id=resource.resource_id,
                         metadata_id=resource.metadata_id,
+                        dest_org=resource.dest_org,
                         request_code=(
                             resource.request_code
                             if resource.request_code and len(resource.request_code.strip()) > 0

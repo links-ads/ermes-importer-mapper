@@ -86,6 +86,7 @@ class DataRetrievalManager:
                 resource_name=message_schema.name,
                 metadata_id=message_schema.metadata_id,
                 bbox=message_schema.geometry,
+                destinatary_organization=message_schema.destinatary_organization,
                 request_code=message_schema.request_code,
                 tmp_path=tmp_path,
                 mosaic=ismosaic,
