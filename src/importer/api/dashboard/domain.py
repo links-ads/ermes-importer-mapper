@@ -5,6 +5,7 @@ import shapely.geometry
 from geoalchemy2 import WKTElement
 from shapely.geometry.multipolygon import MultiPolygon
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from sqlalchemy.sql.sqltypes import DateTime
 
 from importer.database.models import GeoserverResource
@@ -22,6 +23,7 @@ def get_resources(
     bbox: Optional[str] = None,
     start: Optional[DateTime] = None,
     end: Optional[DateTime] = None,
+    destinatary_organizations: Optional[List[str]] = None,
     request_codes: Optional[List[str]] = None,
     include_deleted: Optional[bool] = False,
     exclude_valued_request_code: Optional[bool] = False,
@@ -39,6 +41,9 @@ def get_resources(
         statement = statement.filter(GeoserverResource.resource_id == resource_id)
     if layer_name:
         statement = statement.filter(GeoserverResource.layer_name == layer_name)
+    if destinatary_organizations:
+        statement = statement.filter(or_(GeoserverResource.dest_org.in_(destinatary_organizations),
+                                         GeoserverResource.dest_org.is_(None)))
     if request_codes:
         statement = statement.filter(GeoserverResource.request_code.in_(request_codes))
     if exclude_valued_request_code:

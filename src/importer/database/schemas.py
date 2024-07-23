@@ -24,6 +24,7 @@ class MessageSchema(BaseModel):
     id: str
     name: str
     metadata_id: Optional[str]
+    destinatary_organization: Optional[str]
     request_code: Optional[str]
 
 
@@ -39,6 +40,7 @@ class DownloadedDataSchema(BaseModel):
     metadata_id: str
     bbox: dict
     tmp_path: str
+    destinatary_organization: Optional[str]
     request_code: str
     mosaic: bool
     additional_attributes: Optional[dict]
@@ -69,6 +71,7 @@ class GeoserverResourceSchema(ORMModel):
     resource_id: str  # used for all kind of data
     metadata_id: str  # used for all kind of data
     bbox: str  # used for all kind of data,
+    dest_org: Optional[str]  # used for all kind of data
     request_code: Optional[str]  # used for all kind of data,
     timestamps: Optional[str]  # used for all kind of data
     mosaic: bool  # Storage location is a directory - import as ImageMosaic
