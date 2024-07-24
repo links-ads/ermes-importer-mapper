@@ -62,7 +62,7 @@ class GeoserverResourceSchema(ORMModel):
     workspace: str  # used for all kind of data
     store_name: str  # used for data stored in db
     layer_name: str  # used for all kind of data. It is the table_name of data stored on db
-    layer_title: str  # used for all kind of data. It is the layer title of data stored on db
+    layer_title: Optional[str]  # used for all kind of data
     storage_location: Optional[str]  # used for data stored in a directory
     expire_on: Optional[datetime]  # used for all kind of data
     start: datetime  # used for all kind of data
