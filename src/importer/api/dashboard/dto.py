@@ -42,6 +42,7 @@ class TimeSeriesSchema_v2(BaseModel):
 
     datatype_id: str
     workspace: str
+    destinatary_organization: Optional[str]
     request_code: Optional[str]
     layer_name: Optional[str] = None
     point: str

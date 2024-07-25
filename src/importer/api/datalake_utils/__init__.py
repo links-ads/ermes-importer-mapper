@@ -34,6 +34,7 @@ def get_metadata(organization: str, metadata_id: str):
 def delete_layers(
     organization: str,
     datatype_ids: Optional[List[str]] = Query(None),
+    destinatary_organizations: Optional[List[str]] = Query(None),
     request_codes: Optional[List[str]] = Query(None),
     layer_name: Optional[str] = Query(None),
     resource_id: Optional[str] = Query(None),
@@ -66,6 +67,7 @@ def delete_layers(
             datatype_ids=datatype_ids,
             resource_id=resource_id,
             layer_name=layer_name,
+            destinatary_organizations=destinatary_organizations,
             request_codes=request_codes,
         )
 
