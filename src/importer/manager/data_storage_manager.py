@@ -240,7 +240,11 @@ class DataStorageManager:
                         created_at=resource.creation_date,
                         resource_id=resource.resource_id,
                         metadata_id=resource.metadata_id,
-                        dest_org=resource.dest_org,
+                        dest_org=(
+                            resource.dest_org
+                            if resource.dest_org and len(resource.dest_org.strip()) > 0
+                            else None
+                        ),
                         request_code=(
                             resource.request_code
                             if resource.request_code and len(resource.request_code.strip()) > 0
