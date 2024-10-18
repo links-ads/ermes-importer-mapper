@@ -15,7 +15,7 @@ LOG = logging.getLogger(__name__)
 
 def get_resources(
     session: Session,
-    workspace: str,
+    workspaces: List[str],
     datatype_ids: Optional[List[str]] = None,
     resource_id: Optional[str] = None,
     layer_name: Optional[str] = None,
@@ -31,7 +31,7 @@ def get_resources(
 ) -> List[GeoserverResource]:
 
     statement = session.query(GeoserverResource)
-    statement = statement.filter(GeoserverResource.workspace == workspace)
+    statement = statement.filter(GeoserverResource.workspace.in_(workspaces))
 
     if not include_deleted:
         statement = statement.filter(GeoserverResource.deleted_at.is_(None))

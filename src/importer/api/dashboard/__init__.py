@@ -33,13 +33,32 @@ def get_resources(
     include_deleted: Optional[bool] = False,
     db: Session = Depends(db_webserver),
 ):
-    """Gets stored resources following the given optional criteria.
-
-    :param db: DB session instance, defaults to Depends(db_webserver)
-    :type db: Session, optional
-    :return: list of resource models to be serialized
-    :rtype: List[GeoserverResourceSchema]
     """
+    Retrieve a list of stored resources based on optional filter criteria.
+
+    ### Parameters:
+    - **workspace**: 
+        - The workspace from which to retrieve resources.
+        - **Type**: `str`
+        - **Required**: `True`
+    - **datatype_ids**: 
+        - A list of datatype IDs to filter the resources by.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `None`
+    - **resource_id**: 
+        - A specific resource ID to filter by.
+        - **Type**: `Optional[str]`
+        - **Default**: `None`
+    - **include_deleted**: 
+        - Whether to include resources that have been marked as deleted.
+        - **Type**: `Optional[bool]`
+        - **Default**: `False`
+
+    ### Returns:
+    - A list of resources serialized.
+    - **Type**: `List[GeoserverResourceSchema]`
+    """
+
     resources = domain.get_resources(
         db, workspace, datatype_ids=datatype_ids, resource_id=resource_id, include_deleted=include_deleted
     )
@@ -75,7 +94,7 @@ def __get_filtered_ts(timeseries, start, end):
 
 @router.get("/layers", status_code=200)
 def get_layers(
-    workspace: str,
+    workspaces: List[str] = Query(None),
     datatype_ids: Optional[List[str]] = Query(None),
     bbox: Optional[str] = Query(None),
     start: Optional[datetime] = Query(None),
@@ -85,29 +104,50 @@ def get_layers(
     include_map_requests: Optional[bool] = Query(True),
     db: Session = Depends(db_webserver),
 ):
-    """Gets the list of published layers given optional criteria.
+    """
+    Get a list of published layers based on optional filter criteria.
 
-    :param datatype_ids: list of datatype_id to filter by, defaults to Query(None)
-    :type datatype_ids: Optional[List[str]], optional
-    :param bbox: bounding box string in the form "bottomleft-x,bottomleft-y,topright-x,topright-y",
-    defaults to Query(None)
-    :type bbox: Optional[str], optional
-    :param start: filter resources with start_date >= start, start in the form 'YYYY-MM-DD HH:MM:SS',
-    defaults to Query(None)
-    :type start: Optional[datetime], optional
-    :param end: filter resources with end_date <= end, end in the form 'YYYY-MM-DD HH:MM:SS', defaults to Query(None)
-    :type end: Optional[datetime], optional
-    :param dest_organization: filter resources with destinatary_organization specified
-    :type dest_organization: Optional[str], optional
-    :type request_codes: Optional[List[str]], optional
-    :param db: DB session instance, defaults to Depends(db_webserver)
-    :type db: Session, optional
-    :return: list of layers grouped by datatype id
-    :rtype: List[Dict[str,Dict[str,object]]]
+    ### Parameters:
+    - **workspaces**: 
+        - A list of `workspaces` values to filter the results.
+        - **Type**: `Optional[List[str]]`
+        - Mandatory
+    - **datatype_ids**: 
+        - A list of `datatype_id` values to filter the results.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `Query(None)`
+    - **bbox**: 
+        - A bounding box string in the format `"bottomleft-x,bottomleft-y,topright-x,topright-y"` to filter results within the specified geographic area.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+    - **start**: 
+        - Filters resources where `start_date >= start`. The `start` parameter must be in the format `'YYYY-MM-DD HH:MM:SS'`.
+        - **Type**: `Optional[datetime]`
+        - **Default**: `Query(None)`
+    - **end**: 
+        - Filters resources where `end_date <= end`. The `end` parameter must be in the format `'YYYY-MM-DD HH:MM:SS'`.
+        - **Type**: `Optional[datetime]`
+        - **Default**: `Query(None)`
+    - **dest_organization**: 
+        - Filter resources based on the destinatary organization.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+    - **request_codes**: 
+        - A list of request codes to filter by.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `Query(None)`
+    - **db**: 
+        - The database session instance.
+        - **Type**: `Session`
+        - **Default**: `Depends(db_webserver)`
+
+    ### Returns:
+    - A list of layers grouped by `datatype_id`.
+    - **Type**: `List[Dict[str, Dict[str, object]]]`
     """
     resources = domain.get_resources(
         db,
-        workspace=workspace,
+        workspaces=workspaces,
         datatype_ids=datatype_ids,
         bbox=bbox,
         start=start,
@@ -147,63 +187,64 @@ def get_layers(
 
 @router.get("/timeseries", status_code=200)
 def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depends(db_webserver)):
-    """Retrieves the time series of the requested attribute for layers denoted by the specified datatype_id,
-    at the "point" position
+    """
+    Retrieve the time series of a requested attribute for layers denoted by the specified `datatype_id`, at a given point.
 
-    :param datatype_id: datatype_id of the layers to retrieve the attribute time series from
-    :type datatype_id: str
+    ### Parameters:
+    - **workspace**:
+        - The `workspace` of the layers.
+        - **Type**: `str`
+    - **datatype_id**:
+        - The `datatype_id` of the layers to retrieve the attribute time series from.
+        - **Type**: `str`
+    - **request_code**:
+        - The request code of the layers to retrieve the attribute time series from.
+        - **Type**: `str`
+    - **point**:
+        - The point location specified in WKT format, e.g., `POINT(x y)`.
+        - **Type**: `str`
+    - **start**:
+        - Filter resources where `start_date >= start`. The `start` date should be in the format `'YYYY-MM-DD HH:MM:SS'`.
+        - **Type**: `Optional[datetime]`
+        - **Default**: `None`
+    - **end**:
+        - Filter resources where `end_date <= end`. The `end` date should be in the format `'YYYY-MM-DD HH:MM:SS'`.
+        - **Type**: `Optional[datetime]`
+        - **Default**: `None`
+    - **crs**:
+        - Coordinate reference system (e.g., `'EPSG:4326'`).
+        - **Type**: `str`
+    - **attribute**:
+        - The name of the column containing the requested attribute.
+        - **Type**: `Optional[str]`
+    - **geom_col**:
+        - The name of the database column containing the geometry information.
+        - **Type**: `Optional[str]`
+    - **date_start_col**:
+        - The name of the database column containing the activation start date.
+        - **Type**: `Optional[str]`
+    - **date_end_col**:
+        - The name of the database column containing the activation end date.
+        - **Type**: `Optional[str]`
+    - **creation_date_col**:
+        - The name of the column used to resolve rows with the same `start_date`, preferring the row with the most recent creation date.
+        - **Type**: `Optional[str]`
+    - **db**:
+        - The database session instance.
+        - **Type**: `Session`
+        - **Default**: `Depends(db_webserver)`
 
-    :param request_code: request code of the layers to retrieve the attribute time series from
-    :type request_code: str
+    ### Returns:
+    - A time series of the attribute values at the specified point location.
+    - **Type**: `json`
 
-    :param point: point string in the WKT form PONIT(x y)
-    :type point: str
+    ### Example:
+    To retrieve the time series of the `temperature` value at the point (15.18, 41.68) from `2020-02-04 00:00:00` to `2020-02-11 23:59:59`, assuming the following:
+    - The geometries are stored in the `geometry` column.
+    - The start date is stored in the `date_start` column.
+    - The end date is stored in the `date_end` column.
 
-    :param start: start date in the form 'YYYY-MM-DD HH:MM:SS' filter resources with start_date >= start,
-    defaults to Query(None)
-    :type start: Optional[datetime], optional
-
-    :param end: end date in the form 'YYYY-MM-DD HH:MM:SS' filter resources with end_date <= end,
-    defaults to Query(None)
-    :type end: Optional[datetime], optional
-
-    :param crs: coordinate reference system. For example: 'EPSG:4326'
-    :type crs: str
-
-    :param attribute: name of the column containing the requested attribute
-    :type attribute: Optional[str]
-
-    :param geom_col: name of the db table column containing the geometry
-    :type geom_col: Optional[str]
-
-    :param date_start_col: name of the db table column containing the activation start date
-    :type date_start_col: Optional[str]
-
-    :param date_end_col: name of the db table column containing the activation end date
-    :type date_end_col: Optional[str]
-
-    :param creation_date_col: name of the column to use when choosing between multiple table rows
-    with the same start_date.
-                              Pick always the row with the most recent creation_date_col
-    :type creation_date_col: Optional[str]
-
-    :param db: DB session instance, defaults to Depends(db_webserver)
-    :type db: Session, optional
-
-    :return: time series of the attribute values at "point" location
-    :rtype: json
-
-    Example: I have many GeoJSON files that form a time series saved on the PostGIS db,
-    each containing polygons with certain values over a specified area.
-    I want to get the series of the "temperature" value of the point 15.18,41.68 from date 2020-02-04 00:00:00
-    to date 2020-02-11 23:59:59.
-    Supposing that the GeoJSON files have their geometries saved in the "geometry" column, their start reference date
-    saved in the "date_start" column and
-    their end reference date in the "date_end" column, specifying all these parameters returns me a dataframe
-    with all the values of the "temperature" variable
-    contained in the GeoJSON files for the requested time period, at the specified point location.
-    The "creation_date_col" is used when multiple files span the
-    same time (to be more precise, have the same "date_start"), only the most recent is returned.
+    By specifying these parameters, the API will return a dataframe containing the `temperature` values at the requested point location over the specified time period. If multiple files span the same time period (same `date_start`), the most recent file will be chosen using the `creation_date_col`.
     """
 
     data_storage_manager = DataStorageManager()

@@ -15,13 +15,19 @@ router = APIRouter()
 
 @router.get("/metadata", status_code=200)
 def get_metadata(organization: str, metadata_id: str):
-    """Gets the layer metadata given the metadata_id.
+    """
+    Retrieve the metadata of a layer based on the given `metadata_id`.
 
-    :param project_name: project_name of the layer
-    :type porject_name: str
-
-    :param metadata_id: metadata_id of the layer. It is returned by the API /layers
-    :type metadata_id: str
+    ### Parameters:
+    - **organization**:
+        - The name of the geodatalake organization (project) of the layer.
+        - **Type**: `str`
+    - **metadata_id**:
+        - The ID of the metadata associated with the layer. This is typically returned by the `/layers` API.
+        - **Type**: `str`
+    ### Returns:
+    - The metadata for the specified layer.
+    - **Type**: `json`
     """
     driver = DataLakeDriver()
     metadata = driver.get_metadata(organization, metadata_id)
@@ -40,20 +46,41 @@ def delete_layers(
     resource_id: Optional[str] = Query(None),
     db: Session = Depends(db_webserver),
 ):
-    """Delete the resource associated to the layer from the datalake
+    """
+    Delete resources associated with layers from the data lake, based on provided filters.
 
-    :param datatype_ids: list of datatype_id to filter by, defaults to Query(None)
-    :type datatype_ids: Optional[List[str]], optional
-    :param request_codes: list of codes associated to the map requests
-    :type request_codes: Optional[List[str]], optional
-    :param layer_name: layer name of the resource
-    :type layer_name: Optional[str], optional
-    :param resource_id: id of the resource
-    :type resource_id: Optional[str], optional
-    :param db: DB session instance, defaults to Depends(db_webserver)
-    :type db: Session, optional
-    :return: list of resources deleted
-    :rtype: List[GeoserverResourceSchema]
+    ### Parameters:
+    - **organization**: 
+        - The name of the organization that owns the resources.
+        - **Type**: `str`
+    - **datatype_ids**: 
+        - A list of `datatype_id` values to filter the resources by.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `Query(None)`
+    - **destinatary_organizations**:
+        - A list of destinatary organizations to filter by.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `Query(None)`
+    - **request_codes**: 
+        - A list of request codes associated with the map requests.
+        - **Type**: `Optional[List[str]]`
+        - **Default**: `Query(None)`
+    - **layer_name**: 
+        - The name of the layer whose associated resources are to be deleted.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+    - **resource_id**: 
+        - The ID of the resource to be deleted.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+    - **db**: 
+        - The database session instance for interacting with the data lake.
+        - **Type**: `Session`
+        - **Default**: `Depends(db_webserver)`
+
+    ### Returns:
+    - A list of resources that have been deleted.
+    - **Type**: `List[GeoserverResourceSchema]`
     """
     driver = DataLakeDriver()
     deleted_resources_list = []
