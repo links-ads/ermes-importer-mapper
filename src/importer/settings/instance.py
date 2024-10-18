@@ -61,7 +61,7 @@ class ProjectSettings(BaseSettings):
     use_https: bool = False
     geoserver_host: str
     geoserver_port: str
-    geoserver_workspace: str = "general"
+    geoserver_workspace: str = "gaia"
     geoserver_tif_folder: str = "geotiff"
     geoserver_imagemosaic_folder: str = "imagemosaic"
 

@@ -20,17 +20,27 @@ router = APIRouter()
 def get_resource_path(
     workspace: str, layer_name: str = Query(None), resource_id: str = Query(None), db: Session = Depends(db_webserver)
 ):
-    """Return the temporary filename containing the resource
-
-    :param layer_name: name of the layer. It is returned by the API /layers
-    :type layer_name: str
-
-    :param resource_id: resource_id of the layer. It is returned by the API /layers
-    :type resource_id: str
-
-    :return: temporary filepath
-    :rtype: text/json
     """
+    Retrieve the temporary file path containing the resource.
+
+    ### Parameters:
+    - **workspace**:
+        - The workspace that the resource belongs to.
+        - **Type**: `str`
+    - **layer_name**: 
+        - The name of the layer. This is typically returned by the `/layers` API.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+    - **resource_id**: 
+        - The ID of the resource associated with the layer. This is typically returned by the `/layers` API.
+        - **Type**: `Optional[str]`
+        - **Default**: `Query(None)`
+
+    ### Returns:
+    - The temporary file path for the resource.
+    - **Type**: `text/json`
+    """
+
     assert layer_name or resource_id, HTTPException(status_code=422, detail="Specify at least one parameter")
 
     resources = domain.get_resources(db, workspace=workspace, resource_id=resource_id, layer_name=layer_name)
@@ -52,15 +62,18 @@ def get_resource_path(
 
 @router.get("/download", status_code=200, response_class=FileResponse)
 def download_resource(filename: str):
-    """Gets the resource file given the temporal path returned by API GET resource_path.
-
-    :param filepath: filepath of the resource. This is just a temporary path
-    :type metadata_id: str
-
-    :return: Resource binary file
-    :rtype: application/octet-stream
     """
+    Retrieve the resource file using the temporary path returned by the `GET /resource_path` API.
 
+    ### Parameters:
+    - **filepath**: 
+        - The temporary file path of the resource.
+        - **Type**: `str`
+
+    ### Returns:
+    - The resource as a binary file.
+    - **Type**: `application/octet-stream`
+    """
     def cleanup():
         # delete current file
         LOG.info(f"Remove temp file {filepath}")
