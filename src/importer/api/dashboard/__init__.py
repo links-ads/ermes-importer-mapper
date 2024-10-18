@@ -225,7 +225,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
             layer_name=params.layer_name,
             start=params.start,
             end=params.end,
-            order_by="start",
+            order_by="created_at",
         )
     else:
         LOG.info("no request code")
@@ -237,6 +237,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
             layer_name=params.layer_name,
             start=params.start,
             end=params.end,
+            order_by='created_at'
         )
 
     layer_names = [resource.layer_name for resource in resources]
@@ -257,6 +258,12 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
                 end = pytz.utc.localize(end)
             ts_list = list(filter(lambda t: dp.parse(t) <= end, ts_list))
         timestamps.append(ts_list)
+
+        # if the layer has been selected but
+        # there are no timestamps left after filtering,
+        # take the last one because we assumpt it is still valid
+        if not ts_list and timestamps_:
+            ts_list = [timestamps_[-1]]
 
     if len(resources) == 0:
         raise HTTPException(status_code=404, detail="No resources found")

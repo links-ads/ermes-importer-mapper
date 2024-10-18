@@ -242,6 +242,10 @@ class GeoserverDriver:
         except KeyError:
             pass
 
+        # drop duplicates, keep values from last created file        
+        df = df[~df.index.duplicated(keep='last')]
+        
+        df.sort_index(inplace=True)
         return df
 
     async def get_timeseries(self, session, url, params):
