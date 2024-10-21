@@ -258,15 +258,15 @@ class DataStorageManager:
                     session.flush()
 
     def get_resources(
-        self,
-        session: Session,
-        workspace: str,
-        datatype_ids: Optional[List[str]] = None,
-        resource_id: Optional[str] = None,
-        expire_on: Optional[DateTime] = None,
-        order_by: Optional[Column] = None,
-        created_before: Optional[DateTime] = None,
-    ) -> List[GeoserverResource]:
+            self,
+            session: Session,
+            workspace: str,
+            datatype_ids: Optional[List[str]] = None,
+            resource_id: Optional[str] = None,
+            expire_on: Optional[DateTime] = None,
+            order_by: Optional[Column] = None,
+            created_before: Optional[DateTime] = None,
+        ) -> List[GeoserverResource]:
         statement = session.query(GeoserverResource).filter(GeoserverResource.deleted_at.is_(None))
         statement = statement.filter(GeoserverResource.workspace == workspace)
         if datatype_ids:

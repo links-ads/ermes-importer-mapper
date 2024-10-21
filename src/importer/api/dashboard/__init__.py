@@ -27,7 +27,7 @@ router = APIRouter()
 
 @router.get("/resources", response_model=List[GeoserverResourceSchema], status_code=200)
 def get_resources(
-    workspace: str,
+    workspaces: List[str] = Query(None),
     datatype_ids: Optional[List[str]] = Query(None),
     resource_id: Optional[str] = Query(None),
     include_deleted: Optional[bool] = False,
@@ -37,9 +37,9 @@ def get_resources(
     Retrieve a list of stored resources based on optional filter criteria.
 
     ### Parameters:
-    - **workspace**: 
-        - The workspace from which to retrieve resources.
-        - **Type**: `str`
+    - **workspaces**: 
+        - List of the workspace from which to retrieve resources.
+        - **Type**: `List[str]`
         - **Required**: `True`
     - **datatype_ids**: 
         - A list of datatype IDs to filter the resources by.
@@ -60,7 +60,7 @@ def get_resources(
     """
 
     resources = domain.get_resources(
-        db, workspace, datatype_ids=datatype_ids, resource_id=resource_id, include_deleted=include_deleted
+        db, workspaces, datatype_ids=datatype_ids, resource_id=resource_id, include_deleted=include_deleted
     )
     return resources
 
@@ -169,6 +169,7 @@ def get_layers(
                 "details": (
                     {
                         "name": f"{resource.workspace}:{resource.layer_name}",
+                        "workspace": resource.workspace,
                         "timestamps": __get_filtered_ts(resource.timestamps, start, end),
                         "created_at": resource.created_at.isoformat(timespec="seconds"),
                         "destinatary_organization": resource.dest_org,
@@ -259,7 +260,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     if params.request_code:
         resources = domain.get_resources(
             db,
-            workspace=params.workspace,
+            workspaces=[params.workspace],
             datatype_ids=[params.datatype_id],
             destinatary_organizations=[params.destinatary_organization],
             request_codes=[params.request_code],
@@ -272,7 +273,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
         LOG.info("no request code")
         resources = domain.get_resources(
             db,
-            workspace=params.workspace,
+            workspaces=[params.workspace],
             datatype_ids=[params.datatype_id],
             destinatary_organizations=[params.destinatary_organization],
             layer_name=params.layer_name,
