@@ -90,7 +90,7 @@ def delete_layers(
     if pars:
         resources = dashboard_domain.get_resources(
             db,
-            workspace=organization,
+            workspaces=[organization],
             datatype_ids=datatype_ids,
             resource_id=resource_id,
             layer_name=layer_name,
