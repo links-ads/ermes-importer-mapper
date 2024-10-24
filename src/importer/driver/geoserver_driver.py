@@ -150,7 +150,7 @@ class GeoserverDriver:
         LOG.info(f"Deleting layer {workspace}:{layer_name}")
         result = self.geoserver.delete_layer(workspace=workspace, layer_name=layer_name)
         if result:
-            LOG.error(result)
+            LOG.info(result)
         if is_coveragestore:
             result = self.geoserver.delete_coveragestore(workspace=workspace, coveragestore_name=store_name)
             if result:

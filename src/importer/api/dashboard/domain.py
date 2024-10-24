@@ -40,10 +40,14 @@ def get_resources(
     if resource_id:
         statement = statement.filter(GeoserverResource.resource_id == resource_id)
     if layer_name:
-        statement = statement.filter(GeoserverResource.layer_name == layer_name)
+        statement = statement.filter(GeoserverResource.layer_name == layer_name)  
     if destinatary_organizations:
         statement = statement.filter(or_(GeoserverResource.dest_org.in_(destinatary_organizations),
                                          GeoserverResource.dest_org.is_(None)))
+    else:
+        # if destinatary_organizations is None, return all the layers but
+        # the ones associated to a destinatary organization
+        statement = statement.filter(GeoserverResource.dest_org.is_(None))
     if request_codes:
         statement = statement.filter(GeoserverResource.request_code.in_(request_codes))
     if exclude_valued_request_code:

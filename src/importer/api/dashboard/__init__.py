@@ -27,7 +27,7 @@ router = APIRouter()
 
 @router.get("/resources", response_model=List[GeoserverResourceSchema], status_code=200)
 def get_resources(
-    workspaces: List[str] = Query(None),
+    workspaces: List[str] = Query(),
     datatype_ids: Optional[List[str]] = Query(None),
     resource_id: Optional[str] = Query(None),
     include_deleted: Optional[bool] = False,
@@ -94,7 +94,7 @@ def __get_filtered_ts(timeseries, start, end):
 
 @router.get("/layers", status_code=200)
 def get_layers(
-    workspaces: List[str] = Query(None),
+    workspaces: List[str] = Query(),
     datatype_ids: Optional[List[str]] = Query(None),
     bbox: Optional[str] = Query(None),
     start: Optional[datetime] = Query(None),
