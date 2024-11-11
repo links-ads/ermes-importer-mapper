@@ -72,5 +72,5 @@ def get_resources(
 
 def get_bbox_from_point(point: str):
     x, y = point.x, point.y
-    bbox = f"{x},{y},{round(x+.001, 3)},{round(y+.001, 3)}"
+    bbox = f"{x},{y},{round(x+.000001, 3)},{round(y+.000001, 3)}"
     return bbox
