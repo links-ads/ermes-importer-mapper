@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from typing import Optional
-
+from typing import List
 from fastapi import HTTPException
 from pydantic import BaseModel, ValidationError, validator
 from shapely import wkt
@@ -42,7 +42,6 @@ class TimeSeriesSchema_v2(BaseModel):
 
     datatype_id: str
     workspace: str
-    destinatary_organization: Optional[str]
     request_code: Optional[str]
     layer_name: Optional[str] = None
     point: str
@@ -59,7 +58,7 @@ class TimeSeriesSchema_v2(BaseModel):
     def check_process_count(cls, p, values):
         try:
             p = wkt.loads(p)
-            if p.type != "Point":
+            if p.geom_type != "Point":
                 raise Exception
         except Exception:
             raise HTTPException(status_code=422, detail="Invalid format: it should be POINT(X Y)")

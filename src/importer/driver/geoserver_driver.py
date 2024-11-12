@@ -180,7 +180,7 @@ class GeoserverDriver:
         LOG.info(f"GetFeatureInfo, url: {url}: {params}")
         async with session.get(url, params=params) as response:
             data = await response.json()
-            res = []
+            res = [{}]
             try:
                 LOG.info(f"GetFeatureInfo, response check: {requests.get(url, params=params).json()}")
                 # LOG.debug(f'GetFeatureInfo, response: {data}')
@@ -190,7 +190,7 @@ class GeoserverDriver:
                     LOG.info(f"GetFeatureInfo, res: {res}")
             except Exception as e:
                 LOG.error(f"Error: {str(e)}")
-                res = []
+                res = [{}]
 
             LOG.info(f"GetFeatureInfo, return res: {res}")
             return res
@@ -244,6 +244,7 @@ class GeoserverDriver:
 
         # drop duplicates, keep values from last created file        
         df = df[~df.index.duplicated(keep='last')]
+        df.dropna(how="all", inplace=True)
         
         df.sort_index(inplace=True)
         return df

@@ -187,7 +187,9 @@ def get_layers(
 
 
 @router.get("/timeseries", status_code=200)
-def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depends(db_webserver)):
+def get_timeseries(params: TimeSeriesSchema_v2 = Depends(),
+                   destinatary_organizations: Optional[List[str]] = Query(None),
+                   db: Session = Depends(db_webserver)):
     """
     Retrieve the time series of a requested attribute for layers denoted by the specified `datatype_id`, at a given point.
 
@@ -198,6 +200,9 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
     - **datatype_id**:
         - The `datatype_id` of the layers to retrieve the attribute time series from.
         - **Type**: `str`
+    - **destinatary organizations**:
+        - The destinatary organizations of the layers to retrieve the attribute time series from.
+        - **Type**: `List(str)`
     - **request_code**:
         - The request code of the layers to retrieve the attribute time series from.
         - **Type**: `str`
@@ -262,7 +267,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
             db,
             workspaces=[params.workspace],
             datatype_ids=[params.datatype_id],
-            destinatary_organizations=[params.destinatary_organization],
+            destinatary_organizations=destinatary_organizations,
             request_codes=[params.request_code],
             layer_name=params.layer_name,
             start=params.start,
@@ -275,7 +280,7 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(), db: Session = Depend
             db,
             workspaces=[params.workspace],
             datatype_ids=[params.datatype_id],
-            destinatary_organizations=[params.destinatary_organization],
+            destinatary_organizations=destinatary_organizations,
             layer_name=params.layer_name,
             start=params.start,
             end=params.end,
