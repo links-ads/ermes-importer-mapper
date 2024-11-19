@@ -304,13 +304,14 @@ def get_timeseries(params: TimeSeriesSchema_v2 = Depends(),
             if end.tzinfo is None:
                 end = pytz.utc.localize(end)
             ts_list = list(filter(lambda t: dp.parse(t) <= end, ts_list))
-        timestamps.append(ts_list)
 
         # if the layer has been selected but
         # there are no timestamps left after filtering,
         # take the last one because we assumpt it is still valid
         if not ts_list and timestamps_:
             ts_list = [timestamps_[-1]]
+    
+        timestamps.append(ts_list)
 
     if len(resources) == 0:
         raise HTTPException(status_code=404, detail="No resources found")
