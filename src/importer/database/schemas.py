@@ -15,7 +15,7 @@ class ORMModel(BaseModel):
 
 class MessageSchema(BaseModel):
     geometry: dict
-    datatype_id: str
+    datatype_id: int
     start_date: datetime
     end_date: datetime
     creation_date: Optional[datetime]
