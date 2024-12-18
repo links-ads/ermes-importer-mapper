@@ -116,3 +116,5 @@ For manual file imports regarding a specific `datatype_id`, use the `notifier.py
   * Use the rest API DELETE <geoserver_url>/geoserver/gwc/rest/layers/<layer_name> to successfully remove the layer
   * repeat until the url at the first bullet works
 
+- **Authentication Error**: If you can't login with the GEOSERVER_ADMIN_PASSWORD set in .env file, don't worry. Try with usr: admin, pwd: geoserver for the first login, then change admin password to math the value in the .env file
+
